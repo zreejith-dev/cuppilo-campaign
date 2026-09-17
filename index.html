@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CUPPILO ☕ — A café we're building together</title>
-  <meta name="description" content="Cuppilo isn't open yet. We're building Kerala's first community-shaped café. Share your idea in 2 minutes."/>
+  <title>CUPPILO — A cafe we are building together</title>
+  <meta name="description" content="Cuppilo is not open yet. We are building Kerala's first community-shaped cafe. Share your idea in 2 minutes."/>
   <meta name="robots" content="index, follow"/>
   <link rel="canonical" href="https://cuppilo.in/"/>
   <meta name="theme-color" content="#872419"/>
   <link rel="icon" type="image/svg+xml" href="img/favicon.svg"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://cuppilo.in/"/>
-  <meta property="og:title" content="CUPPILO ☕ — A café we're building together"/>
-  <meta property="og:description" content="We're building Kerala's first community-shaped café. Share your idea in 2 minutes."/>
+  <meta property="og:title" content="CUPPILO — A cafe we are building together"/>
+  <meta property="og:description" content="We are building Kerala's first community-shaped cafe. Share your idea in 2 minutes."/>
   <meta property="og:site_name" content="CUPPILO"/>
   <meta name="twitter:card" content="summary"/>
   <link rel="stylesheet" href="css/styles.css"/>
@@ -28,7 +28,6 @@
 </head>
 <body>
 
-  <!-- TOP BAR — Logo top left -->
   <header class="topbar">
     <img src="img/logo.png" alt="CUPPILO" class="topbar-logo"/>
   </header>
@@ -41,17 +40,23 @@
           <span class="dot"></span>
           A campaign by Cuppilo
         </div>
-        <h1>A café we're building <span class="accent">together.</span></h1>
+        <h1>A cafe we are building <span class="accent">together.</span></h1>
         <p class="hero-sub">Premium experiences. Affordable prices. Meaningful moments.</p>
-        <p class="hero-tagline">We're asking Kerala what they actually want — the drinks, the food, the vibe, the pricing. Every answer shapes what we build.</p>
-        <!-- Replace # with your Google Form URL -->
-        <a href="#" class="hero-cta" target="_blank" rel="noopener">
-          <span class="cta-rotate" id="cta-rotate">
-            <span class="cta-word active">Share your ideas</span>
-            <span class="cta-word">Share your thoughts</span>
-            <span class="cta-word">Complete in 2 min</span>
+        <p class="hero-tagline">We are asking Kerala what they actually want — the drinks, the food, the vibe, the pricing. Every answer shapes what we build.</p>
+      </div>
+    </section>
+
+    <!-- CTA ROTATE -->
+    <section class="cta-section">
+      <div class="container">
+        <a href="#" class="cta-btn" id="cta-btn" target="_blank" rel="noopener">
+          <span class="material-symbols-outlined cta-icon" id="cta-icon">lightbulb</span>
+          <span class="cta-text-wrap">
+            <span class="cta-text active" data-icon="lightbulb">Share your ideas</span>
+            <span class="cta-text" data-icon="chat_bubble">Share your thoughts</span>
+            <span class="cta-text" data-icon="timer">Complete in 2 min</span>
           </span>
-          <span class="material-symbols-outlined" style="font-size:20px">arrow_forward</span>
+          <span class="material-symbols-outlined cta-arrow">arrow_forward</span>
         </a>
       </div>
     </section>
@@ -60,7 +65,7 @@
     <section class="why">
       <div class="container">
         <div class="why-quote">
-          <blockquote>Cuppilo isn't open yet. We're starting with an idea — and we're asking Kerala what that idea should become.</blockquote>
+          <blockquote>Cuppilo is not open yet. We are starting with an idea — and we are asking Kerala what that idea should become.</blockquote>
         </div>
       </div>
     </section>
@@ -74,22 +79,22 @@
         </div>
         <div class="cards-grid">
           <div class="card">
-            <div class="card-icon">☕</div>
+            <span class="material-symbols-outlined card-icon">local_cafe</span>
             <h3>Drinks</h3>
             <p>What should we serve?</p>
           </div>
           <div class="card">
-            <div class="card-icon">🍰</div>
+            <span class="material-symbols-outlined card-icon">restaurant</span>
             <h3>Food</h3>
             <p>What would you order?</p>
           </div>
           <div class="card">
-            <div class="card-icon">🌿</div>
+            <span class="material-symbols-outlined card-icon">park</span>
             <h3>Atmosphere</h3>
             <p>What should Cuppilo feel like?</p>
           </div>
           <div class="card">
-            <div class="card-icon">💡</div>
+            <span class="material-symbols-outlined card-icon">emoji_objects</span>
             <h3>Ideas</h3>
             <p>What would make it special?</p>
           </div>
@@ -110,16 +115,16 @@
 
   <script>
     (function(){
-      var words = document.querySelectorAll('.cta-word');
+      var phrases = document.querySelectorAll('.cta-text');
+      var iconEl = document.getElementById('cta-icon');
       var current = 0;
+
       setInterval(function(){
-        var next = (current + 1) % words.length;
-        words[current].classList.add('exit');
-        words[current].classList.remove('active');
-        words[next].classList.add('active');
-        words[next].classList.remove('exit');
-        current = next;
-      }, 2200);
+        phrases[current].classList.remove('active');
+        current = (current + 1) % phrases.length;
+        phrases[current].classList.add('active');
+        iconEl.textContent = phrases[current].getAttribute('data-icon');
+      }, 2500);
     })();
   </script>
 
