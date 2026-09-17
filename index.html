@@ -44,6 +44,15 @@
         <h1>A café we're building <span class="accent">together.</span></h1>
         <p class="hero-sub">Premium experiences. Affordable prices. Meaningful moments.</p>
         <p class="hero-tagline">We're asking Kerala what they actually want — the drinks, the food, the vibe, the pricing. Every answer shapes what we build.</p>
+        <!-- Replace # with your Google Form URL -->
+        <a href="#" class="hero-cta" target="_blank" rel="noopener">
+          <span class="cta-rotate" id="cta-rotate">
+            <span class="cta-word active">Share your ideas</span>
+            <span class="cta-word">Share your thoughts</span>
+            <span class="cta-word">Complete in 2 min</span>
+          </span>
+          <span class="material-symbols-outlined" style="font-size:20px">arrow_forward</span>
+        </a>
       </div>
     </section>
 
@@ -98,6 +107,21 @@
       <p>&copy; 2026 CUPPILO. All rights reserved.</p>
     </div>
   </footer>
+
+  <script>
+    (function(){
+      var words = document.querySelectorAll('.cta-word');
+      var current = 0;
+      setInterval(function(){
+        var next = (current + 1) % words.length;
+        words[current].classList.add('exit');
+        words[current].classList.remove('active');
+        words[next].classList.add('active');
+        words[next].classList.remove('exit');
+        current = next;
+      }, 2200);
+    })();
+  </script>
 
 </body>
 </html>
