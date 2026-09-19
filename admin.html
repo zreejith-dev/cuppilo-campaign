@@ -118,8 +118,7 @@
       <!-- TAB: Responses -->
       <div class="tab-panel active" id="tab-responses">
         <div class="url-bar">
-          <input type="text" id="scriptUrl" placeholder="Paste your Google Apps Script web app URL..."/>
-          <button onclick="fetchAll()">Load Data</button>
+          <button onclick="fetchAll()" style="flex:1">Load Responses from Supabase</button>
         </div>
 
         <div class="stats">
@@ -218,7 +217,6 @@
         document.getElementById('loginGate').style.display = 'none';
         document.getElementById('dashboardWrap').style.display = 'block';
         loadBuilder();
-        restoreUrl();
       } else {
         document.getElementById('loginErr').style.display = 'block';
         document.getElementById('loginPass').value = '';
@@ -248,29 +246,39 @@
     /* RESPONSES                              */
     /* ══════════════════════════════════════ */
     function fetchAll() {
-      var url = document.getElementById('scriptUrl').value.trim();
-      if (!url) { alert('Please paste your Google Apps Script web app URL.'); return; }
-      localStorage.setItem('cuppilo_gas_url', url);
-      fetch(url).then(function(r){ return r.text(); }).then(function(text){
-        try {
-          var json = JSON.parse(text);
-          var rows = Array.isArray(json) ? json : (json.data && Array.isArray(json.data) ? json.data : null);
-          if (rows) { renderData(rows); }
-          else { document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">No array data in response. Ensure your GAS doGet returns a JSON array.</td></tr>'; }
-        } catch(err) { document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">Could not parse response.</td></tr>'; }
+      var SUPABASE_URL = 'https://wnkejaidmbdcmbksefaf.supabase.co';
+      var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indua2VqYWlkbWJkY21ia3NlZmFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyOTAwNDYsImV4cCI6MjEwNDg2NjA0Nn0.9LYxHA7RYeLcYaXUq5AEYSflCfIqGHD5uY6LdvE5raY';
+
+      fetch(SUPABASE_URL + '/rest/v1/campaign_responses?order=created_at.desc', {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        }
+      }).then(function(r){ return r.json(); }).then(function(rows){
+        if (Array.isArray(rows)) { renderData(rows); }
+        else { document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">No data returned.</td></tr>'; }
       }).catch(function(err){ document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">Fetch failed: ' + err.message + '</td></tr>'; });
     }
 
     function renderData(rows) {
-      if (rows.length > 0 && rows[0][0] && rows[0][0].toString().toLowerCase().includes('timestamp')) rows = rows.slice(1);
       document.getElementById('statTotal').textContent = rows.length;
-      document.getElementById('statCafe').textContent  = mostCommon(rows.map(function(r){return r[3]||''}).filter(Boolean)) || '—';
-      document.getElementById('statAtmos').textContent = mostCommon(rows.map(function(r){return r[4]||''}).filter(Boolean)) || '—';
-      document.getElementById('statPrice').textContent = mostCommon(rows.map(function(r){return r[7]||''}).filter(Boolean)) || '—';
+      document.getElementById('statCafe').textContent  = mostCommon(rows.map(function(r){return r.cafe_type||''}).filter(Boolean)) || '—';
+      document.getElementById('statAtmos').textContent = mostCommon(rows.map(function(r){return r.atmosphere||''}).filter(Boolean)) || '—';
+      document.getElementById('statPrice').textContent = mostCommon(rows.map(function(r){return r.price_range||''}).filter(Boolean)) || '—';
       var html = '';
       rows.forEach(function(r,i){
+        var time = r.created_at ? new Date(r.created_at).toLocaleDateString('en-IN') : '';
         html += '<tr><td>'+(i+1)+'</td>';
-        [0,1,2,3,4,5,6,7,8,9].forEach(function(c){ html += '<td>'+esc(r[c])+'</td>'; });
+        html += '<td>'+esc(time)+'</td>';
+        html += '<td>'+esc(r.name)+'</td>';
+        html += '<td>'+esc(r.frequency)+'</td>';
+        html += '<td>'+esc(r.cafe_type)+'</td>';
+        html += '<td>'+esc(r.atmosphere)+'</td>';
+        html += '<td>'+esc(r.drinks)+'</td>';
+        html += '<td>'+esc(r.food)+'</td>';
+        html += '<td>'+esc(r.price_range)+'</td>';
+        html += '<td>'+esc(r.ideas)+'</td>';
+        html += '<td>'+esc(r.contact)+'</td>';
         html += '</tr>';
       });
       document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="11" class="empty-msg">No responses yet.</td></tr>';
@@ -278,7 +286,6 @@
 
     function mostCommon(a){var c={},b=null,n=0;a.forEach(function(v){c[v]=(c[v]||0)+1});Object.keys(c).forEach(function(k){if(c[k]>n){n=c[k];b=k}});return b}
     function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML}
-    function restoreUrl(){var s=localStorage.getItem('cuppilo_gas_url');if(s)document.getElementById('scriptUrl').value=s}
 
     /* ══════════════════════════════════════ */
     /* FORM BUILDER                           */

@@ -391,7 +391,7 @@
       data.frequency = getSingle('frequency') || '';
 
       // Step 2
-      data.cafeType   = getSingle('cafeType') || '';
+      data.cafe_type   = getSingle('cafeType') || '';
       data.atmosphere = getSingle('atmosphere') || '';
 
       // Step 3
@@ -399,22 +399,24 @@
       data.food   = getMulti('food').join(', ');
 
       // Step 4
-      data.priceRange = getSingle('priceRange') || '';
+      data.price_range = getSingle('priceRange') || '';
 
       // Step 5
       data.ideas   = document.getElementById('inputIdeas').value.trim();
       data.contact = document.getElementById('inputContact').value.trim();
 
-      // Timestamp
-      data.timestamp = new Date().toISOString();
+      // POST to Supabase
+      var SUPABASE_URL = 'https://wnkejaidmbdcmbksefaf.supabase.co';
+      var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indua2VqYWlkbWJkY21ia3NlZmFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyOTAwNDYsImV4cCI6MjEwNDg2NjA0Nn0.9LYxHA7RYeLcYaXUq5AEYSflCfIqGHD5uY6LdvE5raY';
 
-      // POST to Google Apps Script
-      var scriptUrl = localStorage.getItem('cuppilo_gas_url') || 'YOUR_SCRIPT_URL';
-
-      fetch(scriptUrl, {
+      fetch(SUPABASE_URL + '/rest/v1/campaign_responses', {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Prefer': 'return=minimal'
+        },
         body: JSON.stringify(data)
       }).then(function() {
         window.location.href = 'thank-you.html';
