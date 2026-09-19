@@ -16,15 +16,6 @@
   <meta property="og:site_name" content="CUPPILO"/>
   <meta name="twitter:card" content="summary"/>
   <link rel="stylesheet" href="css/styles.css"/>
-
-  <!-- Google Analytics 4 — Replace G-XXXXXXXXXX with your GA4 Measurement ID -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script> -->
 </head>
 <body>
 
@@ -43,7 +34,7 @@
         <h1>A cafe we are building <span class="accent">together.</span></h1>
         <p class="hero-sub">Premium experiences. Affordable prices. Meaningful moments.</p>
         <p class="hero-tagline">We are asking Kerala what they actually want — the drinks, the food, the vibe, the pricing. Every answer shapes what we build.</p>
-        <a href="#" class="cta-btn" id="cta-btn" target="_blank" rel="noopener">
+        <button class="cta-btn" id="cta-btn" onclick="openForm()" type="button">
           <span class="material-symbols-outlined cta-icon" id="cta-icon">lightbulb</span>
           <span class="cta-text-wrap">
             <span class="cta-text active" data-icon="lightbulb">Share your ideas</span>
@@ -51,7 +42,7 @@
             <span class="cta-text" data-icon="timer">Complete in 2 min</span>
           </span>
           <span class="material-symbols-outlined cta-arrow">arrow_forward</span>
-        </a>
+        </button>
       </div>
     </section>
 
@@ -107,12 +98,172 @@
     </div>
   </footer>
 
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- FORM OVERLAY                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="form-overlay" id="formOverlay">
+    <div class="form-panel">
+      <!-- TOPBAR -->
+      <div class="form-topbar">
+        <button class="form-close" onclick="closeForm()" type="button" aria-label="Close form">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <span class="form-topbar-title">CUPPILO</span>
+        <div style="width:40px"></div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="form-progress">
+        <div class="form-progress-fill" id="progressFill"></div>
+      </div>
+
+      <!-- SCROLLABLE BODY -->
+      <div class="form-body">
+
+        <!-- STEP 1 — About You -->
+        <div class="form-step active" data-step="1">
+          <div class="form-step-head">
+            <span class="material-symbols-outlined form-step-icon">person</span>
+            <h2>About You</h2>
+            <p>Tell us a little about yourself</p>
+          </div>
+
+          <div class="form-field">
+            <label>Your name</label>
+            <input type="text" class="form-input" id="inputName" placeholder="Enter your name" required/>
+          </div>
+
+          <div class="form-field">
+            <label>How often do you visit cafes?</label>
+            <div class="form-options" data-field="frequency">
+              <button class="form-opt" type="button" data-value="Daily" onclick="selectSingle(this)">Daily</button>
+              <button class="form-opt" type="button" data-value="Few times a week" onclick="selectSingle(this)">Few times a week</button>
+              <button class="form-opt" type="button" data-value="Few times a month" onclick="selectSingle(this)">Few times a month</button>
+              <button class="form-opt" type="button" data-value="Rarely" onclick="selectSingle(this)">Rarely</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 — Your Cafe -->
+        <div class="form-step" data-step="2">
+          <div class="form-step-head">
+            <span class="material-symbols-outlined form-step-icon">storefront</span>
+            <h2>Your Cafe</h2>
+            <p>What kind of cafe experience do you love?</p>
+          </div>
+
+          <div class="form-field">
+            <label>Favourite cafe style</label>
+            <div class="form-options" data-field="cafeType">
+              <button class="form-opt" type="button" data-value="Specialty Coffee" onclick="selectSingle(this)">Specialty Coffee</button>
+              <button class="form-opt" type="button" data-value="Traditional Kerala" onclick="selectSingle(this)">Traditional Kerala</button>
+              <button class="form-opt" type="button" data-value="Modern Fusion" onclick="selectSingle(this)">Modern Fusion</button>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Preferred atmosphere</label>
+            <div class="form-options" data-field="atmosphere">
+              <button class="form-opt" type="button" data-value="Quiet & Work-Friendly" onclick="selectSingle(this)">Quiet & Work-Friendly</button>
+              <button class="form-opt" type="button" data-value="Social & Lively" onclick="selectSingle(this)">Social & Lively</button>
+              <button class="form-opt" type="button" data-value="Cozy & Intimate" onclick="selectSingle(this)">Cozy & Intimate</button>
+              <button class="form-opt" type="button" data-value="Open Air & Veranda" onclick="selectSingle(this)">Open Air & Veranda</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 — Menu -->
+        <div class="form-step" data-step="3">
+          <div class="form-step-head">
+            <span class="material-symbols-outlined form-step-icon">restaurant_menu</span>
+            <h2>Menu</h2>
+            <p>Pick everything you'd love to see on the menu</p>
+          </div>
+
+          <div class="form-field">
+            <label>Drinks <span class="label-hint">(pick all that apply)</span></label>
+            <div class="form-chips" data-field="drinks">
+              <button class="form-chip" type="button" data-value="Coffee" onclick="toggleChip(this)">Coffee</button>
+              <button class="form-chip" type="button" data-value="Tea" onclick="toggleChip(this)">Tea</button>
+              <button class="form-chip" type="button" data-value="Shakes" onclick="toggleChip(this)">Shakes</button>
+              <button class="form-chip" type="button" data-value="Juices" onclick="toggleChip(this)">Juices</button>
+              <button class="form-chip" type="button" data-value="Smoothies" onclick="toggleChip(this)">Smoothies</button>
+              <button class="form-chip" type="button" data-value="Cold Drinks" onclick="toggleChip(this)">Cold Drinks</button>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Food <span class="label-hint">(pick all that apply)</span></label>
+            <div class="form-chips" data-field="food">
+              <button class="form-chip" type="button" data-value="Pazham Pori" onclick="toggleChip(this)">Pazham Pori</button>
+              <button class="form-chip" type="button" data-value="Unniyappam" onclick="toggleChip(this)">Unniyappam</button>
+              <button class="form-chip" type="button" data-value="Puffs" onclick="toggleChip(this)">Puffs</button>
+              <button class="form-chip" type="button" data-value="Sandwiches" onclick="toggleChip(this)">Sandwiches</button>
+              <button class="form-chip" type="button" data-value="Fries" onclick="toggleChip(this)">Fries</button>
+              <button class="form-chip" type="button" data-value="Desserts" onclick="toggleChip(this)">Desserts</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 — Pricing -->
+        <div class="form-step" data-step="4">
+          <div class="form-step-head">
+            <span class="material-symbols-outlined form-step-icon">payments</span>
+            <h2>Pricing</h2>
+            <p>What price range feels right for you?</p>
+          </div>
+
+          <div class="form-field">
+            <label>Preferred price range per item</label>
+            <div class="form-options" data-field="priceRange">
+              <button class="form-opt" type="button" data-value="Rs.40-80" onclick="selectSingle(this)">Rs.40–80</button>
+              <button class="form-opt" type="button" data-value="Rs.80-120" onclick="selectSingle(this)">Rs.80–120</button>
+              <button class="form-opt" type="button" data-value="Rs.120-160" onclick="selectSingle(this)">Rs.120–160</button>
+              <button class="form-opt" type="button" data-value="Rs.160+" onclick="selectSingle(this)">Rs.160+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5 — Your Ideas -->
+        <div class="form-step" data-step="5">
+          <div class="form-step-head">
+            <span class="material-symbols-outlined form-step-icon">lightbulb</span>
+            <h2>Your Ideas</h2>
+            <p>What would make Cuppilo special to you?</p>
+          </div>
+
+          <div class="form-field">
+            <label>Tell us your idea</label>
+            <textarea class="form-textarea" id="inputIdeas" rows="4" placeholder="Share anything — a drink, a vibe, an experience..."></textarea>
+          </div>
+
+          <div class="form-field">
+            <label>Contact <span class="label-hint">(optional)</span></label>
+            <input type="text" class="form-input" id="inputContact" placeholder="Email or phone — so we can keep you posted"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAV -->
+      <div class="form-nav">
+        <button class="btn-back" type="button" id="btnBack" onclick="prevStep()">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Back
+        </button>
+        <button class="btn-next" type="button" id="btnNext" onclick="nextStep()">
+          Next
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA text rotation -->
   <script>
     (function(){
       var phrases = document.querySelectorAll('.cta-text');
       var iconEl = document.getElementById('cta-icon');
       var current = 0;
-
       setInterval(function(){
         phrases[current].classList.remove('active');
         current = (current + 1) % phrases.length;
@@ -120,6 +271,145 @@
         iconEl.textContent = phrases[current].getAttribute('data-icon');
       }, 2500);
     })();
+  </script>
+
+  <!-- FORM LOGIC -->
+  <script>
+    var currentStep = 1;
+    var totalSteps  = 5;
+
+    /* ── overlay open / close ── */
+    function openForm() {
+      var overlay = document.getElementById('formOverlay');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      currentStep = 1;
+      showStep(1);
+    }
+
+    function closeForm() {
+      var overlay = document.getElementById('formOverlay');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ── step navigation ── */
+    function showStep(n) {
+      var steps = document.querySelectorAll('.form-step');
+      steps.forEach(function(s){ s.classList.remove('active'); });
+      steps[n - 1].classList.add('active');
+
+      var back  = document.getElementById('btnBack');
+      var next  = document.getElementById('btnNext');
+
+      back.style.visibility = n === 1 ? 'hidden' : 'visible';
+
+      if (n === totalSteps) {
+        next.innerHTML = 'Submit <span class="material-symbols-outlined">check</span>';
+        next.onclick = submitForm;
+      } else {
+        next.innerHTML = 'Next <span class="material-symbols-outlined">arrow_forward</span>';
+        next.onclick = nextStep;
+      }
+
+      updateProgress(n);
+    }
+
+    function nextStep() {
+      if (currentStep === 1) {
+        var name = document.getElementById('inputName').value.trim();
+        if (!name) {
+          document.getElementById('inputName').focus();
+          document.getElementById('inputName').classList.add('shake');
+          setTimeout(function(){ document.getElementById('inputName').classList.remove('shake'); }, 500);
+          return;
+        }
+      }
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    function updateProgress(n) {
+      var pct = ((n - 1) / (totalSteps - 1)) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    /* ── single-select option buttons ── */
+    function selectSingle(btn) {
+      var group = btn.closest('.form-options');
+      var opts  = group.querySelectorAll('.form-opt');
+      opts.forEach(function(o){ o.classList.remove('selected'); });
+      btn.classList.add('selected');
+    }
+
+    /* ── multi-select chips ── */
+    function toggleChip(btn) {
+      btn.classList.toggle('selected');
+    }
+
+    /* ── collect & submit ── */
+    function submitForm() {
+      var data = {};
+
+      // Step 1
+      data.name      = document.getElementById('inputName').value.trim();
+      data.frequency = getSingle('frequency') || '';
+
+      // Step 2
+      data.cafeType   = getSingle('cafeType') || '';
+      data.atmosphere = getSingle('atmosphere') || '';
+
+      // Step 3
+      data.drinks = getMulti('drinks').join(', ');
+      data.food   = getMulti('food').join(', ');
+
+      // Step 4
+      data.priceRange = getSingle('priceRange') || '';
+
+      // Step 5
+      data.ideas   = document.getElementById('inputIdeas').value.trim();
+      data.contact = document.getElementById('inputContact').value.trim();
+
+      // Timestamp
+      data.timestamp = new Date().toISOString();
+
+      // POST to Google Apps Script
+      var scriptUrl = 'YOUR_SCRIPT_URL';
+
+      fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(function() {
+        window.location.href = 'thank-you.html';
+      }).catch(function() {
+        window.location.href = 'thank-you.html';
+      });
+    }
+
+    function getSingle(field) {
+      var group = document.querySelector('[data-field="' + field + '"]');
+      if (!group) return null;
+      var sel = group.querySelector('.form-opt.selected');
+      return sel ? sel.getAttribute('data-value') : null;
+    }
+
+    function getMulti(field) {
+      var group = document.querySelector('[data-field="' + field + '"]');
+      if (!group) return [];
+      var chips = group.querySelectorAll('.form-chip.selected');
+      return Array.prototype.map.call(chips, function(c){ return c.getAttribute('data-value'); });
+    }
   </script>
 
 </body>

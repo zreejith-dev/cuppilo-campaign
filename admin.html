@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CUPPILO — Campaign Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    body{background:#f4ece8;min-height:100vh}
+
+    .admin-topbar{
+      display:flex;align-items:center;gap:1rem;
+      padding:1rem 1.25rem;
+      background:rgba(255,248,245,.92);
+      backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--muted);
+      position:sticky;top:0;z-index:50;
+    }
+    .admin-topbar img{height:28px;width:auto}
+
+    .admin-wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+    .admin-title{font-size:1.5rem;font-weight:800;color:var(--charcoal);margin-bottom:.25rem}
+    .admin-sub{font-size:.875rem;color:var(--on-sv);opacity:.6;margin-bottom:2rem}
+
+    /* URL input bar */
+    .url-bar{
+      display:flex;gap:.625rem;margin-bottom:2rem;
+    }
+    .url-bar input{
+      flex:1;padding:.75rem 1rem;border:1.5px solid var(--muted);
+      border-radius:12px;font-family:inherit;font-size:.875rem;
+      background:var(--surface-card);outline:none;
+      transition:border-color .2s;
+    }
+    .url-bar input:focus{border-color:var(--primary)}
+    .url-bar button{
+      padding:.75rem 1.5rem;border-radius:12px;border:none;
+      background:var(--primary);color:var(--on-p);font-family:inherit;
+      font-weight:700;font-size:.875rem;cursor:pointer;white-space:nowrap;
+      transition:background .2s;
+    }
+    .url-bar button:hover{background:var(--primary-dark)}
+
+    /* stats grid */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+    .stat-card{
+      background:var(--surface-card);border:1px solid var(--muted);
+      border-radius:1rem;padding:1.25rem 1rem;text-align:center;
+    }
+    .stat-card .stat-num{font-size:1.75rem;font-weight:800;color:var(--primary)}
+    .stat-card .stat-label{font-size:.75rem;font-weight:600;color:var(--on-sv);margin-top:.25rem;text-transform:uppercase;letter-spacing:.04em}
+
+    /* table */
+    .table-wrap{
+      background:var(--surface-card);border:1px solid var(--muted);
+      border-radius:1rem;overflow:hidden;
+    }
+    .table-wrap table{width:100%;border-collapse:collapse;font-size:.8125rem}
+    .table-wrap th{
+      background:var(--muted);padding:.75rem 1rem;text-align:left;
+      font-weight:700;color:var(--charcoal);white-space:nowrap;
+      position:sticky;top:0;
+    }
+    .table-wrap td{
+      padding:.625rem 1rem;border-top:1px solid var(--muted);
+      color:var(--on-sv);vertical-align:top;
+    }
+    .table-wrap tr:hover td{background:rgba(135,36,25,.03)}
+    .table-scroll{max-height:60vh;overflow:auto}
+
+    .empty-msg{text-align:center;padding:3rem 1rem;color:var(--on-sv);opacity:.5;font-size:.9375rem}
+
+    @media(max-width:640px){
+      .stats{grid-template-columns:1fr 1fr}
+      .url-bar{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="admin-topbar">
+    <img src="img/logo.png" alt="CUPPILO"/>
+  </header>
+
+  <div class="admin-wrap">
+    <h1 class="admin-title">CUPPILO Campaign Dashboard</h1>
+    <p class="admin-sub">View and analyse all community responses in one place.</p>
+
+    <div class="url-bar">
+      <input type="text" id="scriptUrl" placeholder="Paste your Google Apps Script web app URL here..."/>
+      <button onclick="fetchAll()">Load Data</button>
+    </div>
+
+    <div class="stats" id="statsGrid">
+      <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total Responses</div></div>
+      <div class="stat-card"><div class="stat-num" id="statCafe">—</div><div class="stat-label">Top Cafe Type</div></div>
+      <div class="stat-card"><div class="stat-num" id="statAtmos">—</div><div class="stat-label">Top Atmosphere</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPrice">—</div><div class="stat-label">Top Price Range</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Timestamp</th>
+              <th>Name</th>
+              <th>Frequency</th>
+              <th>Cafe Type</th>
+              <th>Atmosphere</th>
+              <th>Drinks</th>
+              <th>Food</th>
+              <th>Price</th>
+              <th>Ideas</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr><td colspan="11" class="empty-msg">Enter your Apps Script URL and click Load Data.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var allRows = [];
+
+    function fetchAll() {
+      var url = document.getElementById('scriptUrl').value.trim();
+      if (!url) { alert('Please paste your Google Apps Script web app URL.'); return; }
+
+      // Save to localStorage for convenience
+      localStorage.setItem('cuppilo_gas_url', url);
+
+      // The GAS web app returns JSON. We fetch with ?action=read (or a dedicated GET endpoint).
+      // If your script only has doPost, you can add a doGet that returns the sheet data as JSON.
+      // For now we fetch as text and try to parse.
+      fetch(url)
+        .then(function(r){ return r.text(); })
+        .then(function(text){
+          try {
+            var json = JSON.parse(text);
+            if (Array.isArray(json)) {
+              renderData(json);
+            } else if (json.data && Array.isArray(json.data)) {
+              renderData(json.data);
+            } else {
+              document.getElementById('tableBody').innerHTML =
+                '<tr><td colspan="11" class="empty-msg">Got a response but no array data. Make sure your Apps Script doGet returns a JSON array of rows.</td></tr>';
+            }
+          } catch(err) {
+            document.getElementById('tableBody').innerHTML =
+              '<tr><td colspan="11" class="empty-msg">Could not parse response. Make sure your Apps Script returns valid JSON.</td></tr>';
+          }
+        })
+        .catch(function(err){
+          document.getElementById('tableBody').innerHTML =
+            '<tr><td colspan="11" class="empty-msg">Fetch failed: ' + err.message + '</td></tr>';
+        });
+    }
+
+    function renderData(rows) {
+      allRows = rows;
+
+      // Skip header row if present (first row with "Timestamp" as first cell)
+      if (rows.length > 0 && rows[0][0] && rows[0][0].toString().toLowerCase().includes('timestamp')) {
+        rows = rows.slice(1);
+      }
+
+      // Stats
+      document.getElementById('statTotal').textContent = rows.length;
+
+      var cafeTypes  = rows.map(function(r){ return r[3] || ''; }).filter(Boolean);
+      var atmos      = rows.map(function(r){ return r[4] || ''; }).filter(Boolean);
+      var prices     = rows.map(function(r){ return r[7] || ''; }).filter(Boolean);
+
+      document.getElementById('statCafe').textContent  = mostCommon(cafeTypes) || '—';
+      document.getElementById('statAtmos').textContent = mostCommon(atmos)     || '—';
+      document.getElementById('statPrice').textContent = mostCommon(prices)    || '—';
+
+      // Table
+      var html = '';
+      rows.forEach(function(r, i){
+        html += '<tr>';
+        html += '<td>' + (i + 1) + '</td>';
+        html += '<td>' + esc(r[0]) + '</td>';
+        html += '<td>' + esc(r[1]) + '</td>';
+        html += '<td>' + esc(r[2]) + '</td>';
+        html += '<td>' + esc(r[3]) + '</td>';
+        html += '<td>' + esc(r[4]) + '</td>';
+        html += '<td>' + esc(r[5]) + '</td>';
+        html += '<td>' + esc(r[6]) + '</td>';
+        html += '<td>' + esc(r[7]) + '</td>';
+        html += '<td>' + esc(r[8]) + '</td>';
+        html += '<td>' + esc(r[9]) + '</td>';
+        html += '</tr>';
+      });
+      document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="11" class="empty-msg">No responses yet.</td></tr>';
+    }
+
+    function mostCommon(arr) {
+      var counts = {};
+      arr.forEach(function(v){ counts[v] = (counts[v] || 0) + 1; });
+      var best = null, bestN = 0;
+      Object.keys(counts).forEach(function(k){
+        if (counts[k] > bestN) { bestN = counts[k]; best = k; }
+      });
+      return best;
+    }
+
+    function esc(s) {
+      if (!s) return '';
+      var d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    // Restore saved URL
+    (function(){
+      var saved = localStorage.getItem('cuppilo_gas_url');
+      if (saved) document.getElementById('scriptUrl').value = saved;
+    })();
+  </script>
+
+</body>
+</html>
