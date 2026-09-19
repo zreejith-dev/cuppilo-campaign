@@ -3,226 +3,370 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CUPPILO — Campaign Dashboard</title>
+  <title>CUPPILO — Admin Dashboard</title>
   <link rel="stylesheet" href="css/styles.css"/>
   <style>
     body{background:#f4ece8;min-height:100vh}
-
-    .admin-topbar{
-      display:flex;align-items:center;gap:1rem;
-      padding:1rem 1.25rem;
-      background:rgba(255,248,245,.92);
-      backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-      border-bottom:1px solid var(--muted);
-      position:sticky;top:0;z-index:50;
-    }
+    .admin-topbar{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:rgba(255,248,245,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--muted);position:sticky;top:0;z-index:50}
     .admin-topbar img{height:28px;width:auto}
-
+    .admin-topbar-title{font-size:.8125rem;font-weight:800;letter-spacing:.08em;color:var(--charcoal);text-transform:uppercase}
     .admin-wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
-
     .admin-title{font-size:1.5rem;font-weight:800;color:var(--charcoal);margin-bottom:.25rem}
     .admin-sub{font-size:.875rem;color:var(--on-sv);opacity:.6;margin-bottom:2rem}
 
-    /* URL input bar */
-    .url-bar{
-      display:flex;gap:.625rem;margin-bottom:2rem;
-    }
-    .url-bar input{
-      flex:1;padding:.75rem 1rem;border:1.5px solid var(--muted);
-      border-radius:12px;font-family:inherit;font-size:.875rem;
-      background:var(--surface-card);outline:none;
-      transition:border-color .2s;
-    }
+    /* Login */
+    .login-gate{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.25rem}
+    .login-card{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;padding:2.5rem 2rem;max-width:380px;width:100%;text-align:center}
+    .login-card img{height:36px;margin-bottom:1.5rem}
+    .login-card h2{font-size:1.25rem;font-weight:800;color:var(--charcoal);margin-bottom:.25rem}
+    .login-card p{font-size:.8125rem;color:var(--on-sv);opacity:.6;margin-bottom:1.5rem}
+    .login-card input{width:100%;padding:.875rem 1rem;border:1.5px solid var(--muted);border-radius:12px;font-family:inherit;font-size:.9375rem;background:var(--surface);outline:none;transition:border-color .2s;margin-bottom:1rem}
+    .login-card input:focus{border-color:var(--primary)}
+    .login-card button{width:100%;padding:.875rem;border-radius:12px;border:none;background:var(--primary);color:var(--on-p);font-family:inherit;font-weight:700;font-size:.9375rem;cursor:pointer;transition:background .2s}
+    .login-card button:hover{background:var(--primary-dark)}
+    .login-err{font-size:.8125rem;color:#ba1a1a;margin-top:.5rem;display:none}
+
+    /* Tabs */
+    .admin-tabs{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:2px solid var(--muted);padding-bottom:0}
+    .admin-tab{padding:.75rem 1.25rem;border:none;background:transparent;font-family:inherit;font-size:.875rem;font-weight:700;color:var(--on-sv);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+    .admin-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+    .admin-tab:hover{color:var(--primary)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* URL bar */
+    .url-bar{display:flex;gap:.625rem;margin-bottom:2rem}
+    .url-bar input{flex:1;padding:.75rem 1rem;border:1.5px solid var(--muted);border-radius:12px;font-family:inherit;font-size:.875rem;background:var(--surface-card);outline:none;transition:border-color .2s}
     .url-bar input:focus{border-color:var(--primary)}
-    .url-bar button{
-      padding:.75rem 1.5rem;border-radius:12px;border:none;
-      background:var(--primary);color:var(--on-p);font-family:inherit;
-      font-weight:700;font-size:.875rem;cursor:pointer;white-space:nowrap;
-      transition:background .2s;
-    }
+    .url-bar button{padding:.75rem 1.5rem;border-radius:12px;border:none;background:var(--primary);color:var(--on-p);font-family:inherit;font-weight:700;font-size:.875rem;cursor:pointer;white-space:nowrap;transition:background .2s}
     .url-bar button:hover{background:var(--primary-dark)}
 
-    /* stats grid */
+    /* Stats */
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-    .stat-card{
-      background:var(--surface-card);border:1px solid var(--muted);
-      border-radius:1rem;padding:1.25rem 1rem;text-align:center;
-    }
+    .stat-card{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;padding:1.25rem 1rem;text-align:center}
     .stat-card .stat-num{font-size:1.75rem;font-weight:800;color:var(--primary)}
     .stat-card .stat-label{font-size:.75rem;font-weight:600;color:var(--on-sv);margin-top:.25rem;text-transform:uppercase;letter-spacing:.04em}
 
-    /* table */
-    .table-wrap{
-      background:var(--surface-card);border:1px solid var(--muted);
-      border-radius:1rem;overflow:hidden;
-    }
+    /* Table */
+    .table-wrap{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;overflow:hidden}
     .table-wrap table{width:100%;border-collapse:collapse;font-size:.8125rem}
-    .table-wrap th{
-      background:var(--muted);padding:.75rem 1rem;text-align:left;
-      font-weight:700;color:var(--charcoal);white-space:nowrap;
-      position:sticky;top:0;
-    }
-    .table-wrap td{
-      padding:.625rem 1rem;border-top:1px solid var(--muted);
-      color:var(--on-sv);vertical-align:top;
-    }
+    .table-wrap th{background:var(--muted);padding:.75rem 1rem;text-align:left;font-weight:700;color:var(--charcoal);white-space:nowrap;position:sticky;top:0}
+    .table-wrap td{padding:.625rem 1rem;border-top:1px solid var(--muted);color:var(--on-sv);vertical-align:top}
     .table-wrap tr:hover td{background:rgba(135,36,25,.03)}
     .table-scroll{max-height:60vh;overflow:auto}
-
     .empty-msg{text-align:center;padding:3rem 1rem;color:var(--on-sv);opacity:.5;font-size:.9375rem}
+
+    /* Form Builder */
+    .builder-section{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;padding:1.5rem;margin-bottom:1.25rem}
+    .builder-section h3{font-size:1rem;font-weight:700;color:var(--charcoal);margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem}
+    .builder-section h3 .material-symbols-outlined{font-size:20px;color:var(--primary)}
+    .builder-section>p{font-size:.8125rem;color:var(--on-sv);opacity:.6;margin-bottom:1rem}
+    .builder-items{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+    .builder-item{display:inline-flex;align-items:center;gap:.375rem;padding:.5rem .875rem;border:1.5px solid var(--muted);border-radius:9999px;font-size:.8125rem;font-weight:600;color:var(--on-sv);background:var(--surface)}
+    .builder-item .remove-btn{width:20px;height:20px;border-radius:50%;border:none;background:rgba(186,26,26,.1);color:#ba1a1a;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:background .2s;line-height:1}
+    .builder-item .remove-btn:hover{background:rgba(186,26,26,.25)}
+    .builder-add{display:flex;gap:.5rem}
+    .builder-add input{flex:1;padding:.625rem .875rem;border:1.5px solid var(--muted);border-radius:10px;font-family:inherit;font-size:.8125rem;background:var(--surface);outline:none;transition:border-color .2s}
+    .builder-add input:focus{border-color:var(--primary)}
+    .builder-add button{padding:.625rem 1rem;border-radius:10px;border:none;background:var(--primary);color:var(--on-p);font-family:inherit;font-weight:700;font-size:.8125rem;cursor:pointer;white-space:nowrap;transition:background .2s}
+    .builder-add button:hover{background:var(--primary-dark)}
+    .builder-actions{display:flex;gap:.75rem;margin-top:1.25rem}
+    .builder-actions button{padding:.75rem 1.5rem;border-radius:12px;border:none;font-family:inherit;font-weight:700;font-size:.875rem;cursor:pointer;transition:all .2s}
+    .btn-publish{background:var(--primary);color:var(--on-p)}
+    .btn-publish:hover{background:var(--primary-dark)}
+    .btn-reset{background:var(--muted);color:var(--on-sv)}
+    .btn-reset:hover{background:#d6cfc6}
+    .builder-status{font-size:.8125rem;color:var(--success);font-weight:600;margin-top:.75rem;display:none}
 
     @media(max-width:640px){
       .stats{grid-template-columns:1fr 1fr}
       .url-bar{flex-direction:column}
+      .admin-tabs{overflow-x:auto}
     }
   </style>
 </head>
 <body>
 
-  <header class="admin-topbar">
-    <img src="img/logo.png" alt="CUPPILO"/>
-  </header>
-
-  <div class="admin-wrap">
-    <h1 class="admin-title">CUPPILO Campaign Dashboard</h1>
-    <p class="admin-sub">View and analyse all community responses in one place.</p>
-
-    <div class="url-bar">
-      <input type="text" id="scriptUrl" placeholder="Paste your Google Apps Script web app URL here..."/>
-      <button onclick="fetchAll()">Load Data</button>
+  <!-- LOGIN GATE -->
+  <div class="login-gate" id="loginGate">
+    <div class="login-card">
+      <img src="img/logo.png" alt="CUPPILO"/>
+      <h2>Admin Dashboard</h2>
+      <p>Enter the admin password to continue</p>
+      <input type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <button onclick="doLogin()">Sign In</button>
+      <p class="login-err" id="loginErr">Incorrect password. Try again.</p>
     </div>
+  </div>
 
-    <div class="stats" id="statsGrid">
-      <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total Responses</div></div>
-      <div class="stat-card"><div class="stat-num" id="statCafe">—</div><div class="stat-label">Top Cafe Type</div></div>
-      <div class="stat-card"><div class="stat-num" id="statAtmos">—</div><div class="stat-label">Top Atmosphere</div></div>
-      <div class="stat-card"><div class="stat-num" id="statPrice">—</div><div class="stat-label">Top Price Range</div></div>
-    </div>
+  <!-- DASHBOARD (hidden until login) -->
+  <div id="dashboardWrap" style="display:none">
+    <header class="admin-topbar">
+      <img src="img/logo.png" alt="CUPPILO"/>
+      <span class="admin-topbar-title">Admin</span>
+    </header>
 
-    <div class="table-wrap">
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Timestamp</th>
-              <th>Name</th>
-              <th>Frequency</th>
-              <th>Cafe Type</th>
-              <th>Atmosphere</th>
-              <th>Drinks</th>
-              <th>Food</th>
-              <th>Price</th>
-              <th>Ideas</th>
-              <th>Contact</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            <tr><td colspan="11" class="empty-msg">Enter your Apps Script URL and click Load Data.</td></tr>
-          </tbody>
-        </table>
+    <div class="admin-wrap">
+      <h1 class="admin-title">CUPPILO Campaign Dashboard</h1>
+      <p class="admin-sub">Manage your campaign form and view all community responses.</p>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('responses',this)">Responses</button>
+        <button class="admin-tab" onclick="switchTab('builder',this)">Form Builder</button>
+      </div>
+
+      <!-- TAB: Responses -->
+      <div class="tab-panel active" id="tab-responses">
+        <div class="url-bar">
+          <input type="text" id="scriptUrl" placeholder="Paste your Google Apps Script web app URL..."/>
+          <button onclick="fetchAll()">Load Data</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Responses</div></div>
+          <div class="stat-card"><div class="stat-num" id="statCafe">—</div><div class="stat-label">Top Cafe</div></div>
+          <div class="stat-card"><div class="stat-num" id="statAtmos">—</div><div class="stat-label">Top Vibe</div></div>
+          <div class="stat-card"><div class="stat-num" id="statPrice">—</div><div class="stat-label">Top Price</div></div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>#</th><th>Time</th><th>Name</th><th>Frequency</th><th>Cafe</th><th>Vibe</th><th>Drinks</th><th>Food</th><th>Price</th><th>Ideas</th><th>Contact</th></tr></thead>
+              <tbody id="tableBody"><tr><td colspan="11" class="empty-msg">Enter your Apps Script URL and click Load Data.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Form Builder -->
+      <div class="tab-panel" id="tab-builder">
+        <p style="font-size:.875rem;color:var(--on-sv);opacity:.6;margin-bottom:1.5rem">Add or remove items from the campaign form. Changes are published to the live form instantly via localStorage. No code editing needed.</p>
+
+        <div class="builder-section">
+          <h3><span class="material-symbols-outlined">local_cafe</span> Drinks</h3>
+          <p>Multi-select chips on Step 3 of the form</p>
+          <div class="builder-items" id="builderDrinks"></div>
+          <div class="builder-add">
+            <input type="text" id="newDrink" placeholder="Add a drink (e.g. Iced Latte)" onkeydown="if(event.key==='Enter')addItem('drinks')"/>
+            <button onclick="addItem('drinks')">Add</button>
+          </div>
+        </div>
+
+        <div class="builder-section">
+          <h3><span class="material-symbols-outlined">restaurant</span> Food</h3>
+          <p>Multi-select chips on Step 3 of the form</p>
+          <div class="builder-items" id="builderFood"></div>
+          <div class="builder-add">
+            <input type="text" id="newFood" placeholder="Add a food item (e.g. Croissant)" onkeydown="if(event.key==='Enter')addItem('food')"/>
+            <button onclick="addItem('food')">Add</button>
+          </div>
+        </div>
+
+        <div class="builder-section">
+          <h3><span class="material-symbols-outlined">storefront</span> Cafe Types</h3>
+          <p>Single-select options on Step 2</p>
+          <div class="builder-items" id="builderCafeTypes"></div>
+          <div class="builder-add">
+            <input type="text" id="newCafeType" placeholder="Add a cafe type" onkeydown="if(event.key==='Enter')addItem('cafeTypes')"/>
+            <button onclick="addItem('cafeTypes')">Add</button>
+          </div>
+        </div>
+
+        <div class="builder-section">
+          <h3><span class="material-symbols-outlined">park</span> Atmospheres</h3>
+          <p>Single-select options on Step 2</p>
+          <div class="builder-items" id="builderAtmospheres"></div>
+          <div class="builder-add">
+            <input type="text" id="newAtmosphere" placeholder="Add an atmosphere" onkeydown="if(event.key==='Enter')addItem('atmospheres')"/>
+            <button onclick="addItem('atmospheres')">Add</button>
+          </div>
+        </div>
+
+        <div class="builder-section">
+          <h3><span class="material-symbols-outlined">payments</span> Price Ranges</h3>
+          <p>Single-select options on Step 4</p>
+          <div class="builder-items" id="builderPrices"></div>
+          <div class="builder-add">
+            <input type="text" id="newPrice" placeholder="Add a price range (e.g. Rs.200+)" onkeydown="if(event.key==='Enter')addItem('prices')"/>
+            <button onclick="addItem('prices')">Add</button>
+          </div>
+        </div>
+
+        <div class="builder-actions">
+          <button class="btn-publish" onclick="publishConfig()">
+            <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">upload</span>
+            Publish to Live Form
+          </button>
+          <button class="btn-reset" onclick="resetConfig()">Reset to Default</button>
+        </div>
+        <p class="builder-status" id="builderStatus">Published! The live form will now use your updated items.</p>
       </div>
     </div>
   </div>
 
   <script>
-    var allRows = [];
+    /* ══════════════════════════════════════ */
+    /* PASSWORD SECURITY                      */
+    /* ══════════════════════════════════════ */
+    var ADMIN_HASH = 'cuppilo2026';  /* Simple hash — change this to your password */
 
+    function doLogin() {
+      var pass = document.getElementById('loginPass').value;
+      if (pass === ADMIN_HASH) {
+        sessionStorage.setItem('cuppilo_admin_auth', '1');
+        document.getElementById('loginGate').style.display = 'none';
+        document.getElementById('dashboardWrap').style.display = 'block';
+        loadBuilder();
+        restoreUrl();
+      } else {
+        document.getElementById('loginErr').style.display = 'block';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+      }
+    }
+
+    /* Check if already logged in this session */
+    (function(){
+      if (sessionStorage.getItem('cuppilo_admin_auth') === '1') {
+        document.getElementById('loginGate').style.display = 'none';
+        document.getElementById('dashboardWrap').style.display = 'block';
+      }
+    })();
+
+    /* ══════════════════════════════════════ */
+    /* TABS                                   */
+    /* ══════════════════════════════════════ */
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      document.querySelectorAll('.admin-tab').forEach(function(b){ b.classList.remove('active'); });
+      document.getElementById('tab-' + id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    /* ══════════════════════════════════════ */
+    /* RESPONSES                              */
+    /* ══════════════════════════════════════ */
     function fetchAll() {
       var url = document.getElementById('scriptUrl').value.trim();
       if (!url) { alert('Please paste your Google Apps Script web app URL.'); return; }
-
-      // Save to localStorage for convenience
       localStorage.setItem('cuppilo_gas_url', url);
-
-      // The GAS web app returns JSON. We fetch with ?action=read (or a dedicated GET endpoint).
-      // If your script only has doPost, you can add a doGet that returns the sheet data as JSON.
-      // For now we fetch as text and try to parse.
-      fetch(url)
-        .then(function(r){ return r.text(); })
-        .then(function(text){
-          try {
-            var json = JSON.parse(text);
-            if (Array.isArray(json)) {
-              renderData(json);
-            } else if (json.data && Array.isArray(json.data)) {
-              renderData(json.data);
-            } else {
-              document.getElementById('tableBody').innerHTML =
-                '<tr><td colspan="11" class="empty-msg">Got a response but no array data. Make sure your Apps Script doGet returns a JSON array of rows.</td></tr>';
-            }
-          } catch(err) {
-            document.getElementById('tableBody').innerHTML =
-              '<tr><td colspan="11" class="empty-msg">Could not parse response. Make sure your Apps Script returns valid JSON.</td></tr>';
-          }
-        })
-        .catch(function(err){
-          document.getElementById('tableBody').innerHTML =
-            '<tr><td colspan="11" class="empty-msg">Fetch failed: ' + err.message + '</td></tr>';
-        });
+      fetch(url).then(function(r){ return r.text(); }).then(function(text){
+        try {
+          var json = JSON.parse(text);
+          var rows = Array.isArray(json) ? json : (json.data && Array.isArray(json.data) ? json.data : null);
+          if (rows) { renderData(rows); }
+          else { document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">No array data in response. Ensure your GAS doGet returns a JSON array.</td></tr>'; }
+        } catch(err) { document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">Could not parse response.</td></tr>'; }
+      }).catch(function(err){ document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">Fetch failed: ' + err.message + '</td></tr>'; });
     }
 
     function renderData(rows) {
-      allRows = rows;
-
-      // Skip header row if present (first row with "Timestamp" as first cell)
-      if (rows.length > 0 && rows[0][0] && rows[0][0].toString().toLowerCase().includes('timestamp')) {
-        rows = rows.slice(1);
-      }
-
-      // Stats
+      if (rows.length > 0 && rows[0][0] && rows[0][0].toString().toLowerCase().includes('timestamp')) rows = rows.slice(1);
       document.getElementById('statTotal').textContent = rows.length;
-
-      var cafeTypes  = rows.map(function(r){ return r[3] || ''; }).filter(Boolean);
-      var atmos      = rows.map(function(r){ return r[4] || ''; }).filter(Boolean);
-      var prices     = rows.map(function(r){ return r[7] || ''; }).filter(Boolean);
-
-      document.getElementById('statCafe').textContent  = mostCommon(cafeTypes) || '—';
-      document.getElementById('statAtmos').textContent = mostCommon(atmos)     || '—';
-      document.getElementById('statPrice').textContent = mostCommon(prices)    || '—';
-
-      // Table
+      document.getElementById('statCafe').textContent  = mostCommon(rows.map(function(r){return r[3]||''}).filter(Boolean)) || '—';
+      document.getElementById('statAtmos').textContent = mostCommon(rows.map(function(r){return r[4]||''}).filter(Boolean)) || '—';
+      document.getElementById('statPrice').textContent = mostCommon(rows.map(function(r){return r[7]||''}).filter(Boolean)) || '—';
       var html = '';
-      rows.forEach(function(r, i){
-        html += '<tr>';
-        html += '<td>' + (i + 1) + '</td>';
-        html += '<td>' + esc(r[0]) + '</td>';
-        html += '<td>' + esc(r[1]) + '</td>';
-        html += '<td>' + esc(r[2]) + '</td>';
-        html += '<td>' + esc(r[3]) + '</td>';
-        html += '<td>' + esc(r[4]) + '</td>';
-        html += '<td>' + esc(r[5]) + '</td>';
-        html += '<td>' + esc(r[6]) + '</td>';
-        html += '<td>' + esc(r[7]) + '</td>';
-        html += '<td>' + esc(r[8]) + '</td>';
-        html += '<td>' + esc(r[9]) + '</td>';
+      rows.forEach(function(r,i){
+        html += '<tr><td>'+(i+1)+'</td>';
+        [0,1,2,3,4,5,6,7,8,9].forEach(function(c){ html += '<td>'+esc(r[c])+'</td>'; });
         html += '</tr>';
       });
       document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="11" class="empty-msg">No responses yet.</td></tr>';
     }
 
-    function mostCommon(arr) {
-      var counts = {};
-      arr.forEach(function(v){ counts[v] = (counts[v] || 0) + 1; });
-      var best = null, bestN = 0;
-      Object.keys(counts).forEach(function(k){
-        if (counts[k] > bestN) { bestN = counts[k]; best = k; }
+    function mostCommon(a){var c={},b=null,n=0;a.forEach(function(v){c[v]=(c[v]||0)+1});Object.keys(c).forEach(function(k){if(c[k]>n){n=c[k];b=k}});return b}
+    function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+    function restoreUrl(){var s=localStorage.getItem('cuppilo_gas_url');if(s)document.getElementById('scriptUrl').value=s}
+
+    /* ══════════════════════════════════════ */
+    /* FORM BUILDER                           */
+    /* ══════════════════════════════════════ */
+    var STORAGE_KEY = 'cuppilo_form_config';
+
+    var defaultConfig = {
+      drinks: ['Coffee', 'Tea', 'Shakes', 'Juices', 'Smoothies', 'Cold Drinks'],
+      food: ['Pazham Pori', 'Unniyappam', 'Puffs', 'Sandwiches', 'Fries', 'Desserts'],
+      cafeTypes: ['Specialty Coffee', 'Traditional Kerala', 'Modern Fusion'],
+      atmospheres: ['Quiet & Work-Friendly', 'Social & Lively', 'Cozy & Intimate', 'Open Air & Veranda'],
+      prices: ['Rs.40-80', 'Rs.80-120', 'Rs.120-160', 'Rs.160+']
+    };
+
+    var builderMap = {
+      drinks:       { container: 'builderDrinks',      input: 'newDrink' },
+      food:         { container: 'builderFood',         input: 'newFood' },
+      cafeTypes:    { container: 'builderCafeTypes',    input: 'newCafeType' },
+      atmospheres:  { container: 'builderAtmospheres',  input: 'newAtmosphere' },
+      prices:       { container: 'builderPrices',       input: 'newPrice' }
+    };
+
+    function getConfig() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultConfig)); }
+      catch(e) { return JSON.parse(JSON.stringify(defaultConfig)); }
+    }
+
+    function saveConfig(cfg) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+    }
+
+    function loadBuilder() {
+      var cfg = getConfig();
+      Object.keys(builderMap).forEach(function(key){
+        renderBuilderItems(key, cfg[key] || []);
       });
-      return best;
     }
 
-    function esc(s) {
-      if (!s) return '';
-      var d = document.createElement('div');
-      d.textContent = s;
-      return d.innerHTML;
+    function renderBuilderItems(key, items) {
+      var el = document.getElementById(builderMap[key].container);
+      el.innerHTML = '';
+      items.forEach(function(item, i){
+        var tag = document.createElement('span');
+        tag.className = 'builder-item';
+        tag.innerHTML = esc(item) + ' <button class="remove-btn" onclick="removeItem(\'' + key + '\',' + i + ')" title="Remove">&times;</button>';
+        el.appendChild(tag);
+      });
     }
 
-    // Restore saved URL
-    (function(){
-      var saved = localStorage.getItem('cuppilo_gas_url');
-      if (saved) document.getElementById('scriptUrl').value = saved;
-    })();
+    function addItem(key) {
+      var input = document.getElementById(builderMap[key].input);
+      var val = input.value.trim();
+      if (!val) return;
+      var cfg = getConfig();
+      if (!cfg[key]) cfg[key] = [];
+      if (cfg[key].indexOf(val) === -1) {
+        cfg[key].push(val);
+        saveConfig(cfg);
+        renderBuilderItems(key, cfg[key]);
+      }
+      input.value = '';
+      input.focus();
+    }
+
+    function removeItem(key, index) {
+      var cfg = getConfig();
+      cfg[key].splice(index, 1);
+      saveConfig(cfg);
+      renderBuilderItems(key, cfg[key]);
+    }
+
+    function publishConfig() {
+      var cfg = getConfig();
+      saveConfig(cfg);
+      var status = document.getElementById('builderStatus');
+      status.style.display = 'block';
+      setTimeout(function(){ status.style.display = 'none'; }, 3000);
+    }
+
+    function resetConfig() {
+      if (!confirm('Reset all form items to defaults?')) return;
+      saveConfig(JSON.parse(JSON.stringify(defaultConfig)));
+      loadBuilder();
+      var status = document.getElementById('builderStatus');
+      status.textContent = 'Reset to defaults. Click Publish to apply.';
+      status.style.display = 'block';
+      setTimeout(function(){ status.style.display = 'none'; status.textContent = 'Published! The live form will now use your updated items.'; }, 3000);
+    }
   </script>
 
 </body>

@@ -15,7 +15,9 @@
   <meta property="og:description" content="We are building Kerala's first community-shaped cafe. Share your idea in 2 minutes."/>
   <meta property="og:site_name" content="CUPPILO"/>
   <meta name="twitter:card" content="summary"/>
-  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="css/styles.css" defer/>
 </head>
 <body>
 
@@ -41,7 +43,7 @@
             <span class="cta-text" data-icon="chat_bubble">Share your thoughts</span>
             <span class="cta-text" data-icon="timer">Complete in 2 min</span>
           </span>
-          <span class="material-symbols-outlined cta-arrow">arrow_forward</span>
+
         </button>
       </div>
     </section>
@@ -154,21 +156,12 @@
 
           <div class="form-field">
             <label>Favourite cafe style</label>
-            <div class="form-options" data-field="cafeType">
-              <button class="form-opt" type="button" data-value="Specialty Coffee" onclick="selectSingle(this)">Specialty Coffee</button>
-              <button class="form-opt" type="button" data-value="Traditional Kerala" onclick="selectSingle(this)">Traditional Kerala</button>
-              <button class="form-opt" type="button" data-value="Modern Fusion" onclick="selectSingle(this)">Modern Fusion</button>
-            </div>
+            <div class="form-options" data-field="cafeType" id="optsCafeType"></div>
           </div>
 
           <div class="form-field">
             <label>Preferred atmosphere</label>
-            <div class="form-options" data-field="atmosphere">
-              <button class="form-opt" type="button" data-value="Quiet & Work-Friendly" onclick="selectSingle(this)">Quiet & Work-Friendly</button>
-              <button class="form-opt" type="button" data-value="Social & Lively" onclick="selectSingle(this)">Social & Lively</button>
-              <button class="form-opt" type="button" data-value="Cozy & Intimate" onclick="selectSingle(this)">Cozy & Intimate</button>
-              <button class="form-opt" type="button" data-value="Open Air & Veranda" onclick="selectSingle(this)">Open Air & Veranda</button>
-            </div>
+            <div class="form-options" data-field="atmosphere" id="optsAtmosphere"></div>
           </div>
         </div>
 
@@ -182,26 +175,12 @@
 
           <div class="form-field">
             <label>Drinks <span class="label-hint">(pick all that apply)</span></label>
-            <div class="form-chips" data-field="drinks">
-              <button class="form-chip" type="button" data-value="Coffee" onclick="toggleChip(this)">Coffee</button>
-              <button class="form-chip" type="button" data-value="Tea" onclick="toggleChip(this)">Tea</button>
-              <button class="form-chip" type="button" data-value="Shakes" onclick="toggleChip(this)">Shakes</button>
-              <button class="form-chip" type="button" data-value="Juices" onclick="toggleChip(this)">Juices</button>
-              <button class="form-chip" type="button" data-value="Smoothies" onclick="toggleChip(this)">Smoothies</button>
-              <button class="form-chip" type="button" data-value="Cold Drinks" onclick="toggleChip(this)">Cold Drinks</button>
-            </div>
+            <div class="form-chips" data-field="drinks" id="chipsDrinks"></div>
           </div>
 
           <div class="form-field">
             <label>Food <span class="label-hint">(pick all that apply)</span></label>
-            <div class="form-chips" data-field="food">
-              <button class="form-chip" type="button" data-value="Pazham Pori" onclick="toggleChip(this)">Pazham Pori</button>
-              <button class="form-chip" type="button" data-value="Unniyappam" onclick="toggleChip(this)">Unniyappam</button>
-              <button class="form-chip" type="button" data-value="Puffs" onclick="toggleChip(this)">Puffs</button>
-              <button class="form-chip" type="button" data-value="Sandwiches" onclick="toggleChip(this)">Sandwiches</button>
-              <button class="form-chip" type="button" data-value="Fries" onclick="toggleChip(this)">Fries</button>
-              <button class="form-chip" type="button" data-value="Desserts" onclick="toggleChip(this)">Desserts</button>
-            </div>
+            <div class="form-chips" data-field="food" id="chipsFood"></div>
           </div>
         </div>
 
@@ -215,12 +194,7 @@
 
           <div class="form-field">
             <label>Preferred price range per item</label>
-            <div class="form-options" data-field="priceRange">
-              <button class="form-opt" type="button" data-value="Rs.40-80" onclick="selectSingle(this)">Rs.40–80</button>
-              <button class="form-opt" type="button" data-value="Rs.80-120" onclick="selectSingle(this)">Rs.80–120</button>
-              <button class="form-opt" type="button" data-value="Rs.120-160" onclick="selectSingle(this)">Rs.120–160</button>
-              <button class="form-opt" type="button" data-value="Rs.160+" onclick="selectSingle(this)">Rs.160+</button>
-            </div>
+            <div class="form-options" data-field="priceRange" id="optsPriceRange"></div>
           </div>
         </div>
 
@@ -270,6 +244,58 @@
         phrases[current].classList.add('active');
         iconEl.textContent = phrases[current].getAttribute('data-icon');
       }, 2500);
+    })();
+  </script>
+
+  <!-- DYNAMIC FORM CONFIG LOADER -->
+  <script>
+    (function(){
+      var STORAGE_KEY = 'cuppilo_form_config';
+      var defaults = {
+        drinks: ['Coffee', 'Tea', 'Shakes', 'Juices', 'Smoothies', 'Cold Drinks'],
+        food: ['Pazham Pori', 'Unniyappam', 'Puffs', 'Sandwiches', 'Fries', 'Desserts'],
+        cafeTypes: ['Specialty Coffee', 'Traditional Kerala', 'Modern Fusion'],
+        atmospheres: ['Quiet & Work-Friendly', 'Social & Lively', 'Cozy & Intimate', 'Open Air & Veranda'],
+        prices: ['Rs.40-80', 'Rs.80-120', 'Rs.120-160', 'Rs.160+']
+      };
+      var cfg;
+      try { cfg = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaults; } catch(e) { cfg = defaults; }
+
+      function renderOpts(containerId, items) {
+        var el = document.getElementById(containerId);
+        if (!el) return;
+        el.innerHTML = '';
+        items.forEach(function(item) {
+          var btn = document.createElement('button');
+          btn.className = 'form-opt';
+          btn.type = 'button';
+          btn.setAttribute('data-value', item);
+          btn.setAttribute('onclick', 'selectSingle(this)');
+          btn.textContent = item;
+          el.appendChild(btn);
+        });
+      }
+
+      function renderChips(containerId, items) {
+        var el = document.getElementById(containerId);
+        if (!el) return;
+        el.innerHTML = '';
+        items.forEach(function(item) {
+          var btn = document.createElement('button');
+          btn.className = 'form-chip';
+          btn.type = 'button';
+          btn.setAttribute('data-value', item);
+          btn.setAttribute('onclick', 'toggleChip(this)');
+          btn.textContent = item;
+          el.appendChild(btn);
+        });
+      }
+
+      renderOpts('optsCafeType', cfg.cafeTypes || defaults.cafeTypes);
+      renderOpts('optsAtmosphere', cfg.atmospheres || defaults.atmospheres);
+      renderOpts('optsPriceRange', cfg.prices || defaults.prices);
+      renderChips('chipsDrinks', cfg.drinks || defaults.drinks);
+      renderChips('chipsFood', cfg.food || defaults.food);
     })();
   </script>
 
@@ -383,7 +409,7 @@
       data.timestamp = new Date().toISOString();
 
       // POST to Google Apps Script
-      var scriptUrl = 'YOUR_SCRIPT_URL';
+      var scriptUrl = localStorage.getItem('cuppilo_gas_url') || 'YOUR_SCRIPT_URL';
 
       fetch(scriptUrl, {
         method: 'POST',
