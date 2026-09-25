@@ -22,7 +22,7 @@
 <body>
 
   <header class="topbar">
-    <img src="img/logo.png" alt="CUPPILO" class="topbar-logo"/>
+    <img src="img/logo-icon.png" alt="CUPPILO" class="topbar-logo"/>
   </header>
 
   <main>
@@ -35,11 +35,12 @@
         </div>
         <h1>A cafe we are building <span class="accent">together.</span></h1>
         <p class="hero-sub">Premium experiences. Affordable prices. Meaningful moments.</p>
+        <p class="hero-countdown" id="hero-countdown">Until Cuppilo opens: -- days --:--:--</p>
         <p class="hero-tagline">We are asking Kerala what they actually want — the drinks, the food, the vibe, the pricing. Every answer shapes what we build.</p>
         <button class="cta-btn" id="cta-btn" onclick="openForm()" type="button">
           <span class="material-symbols-outlined cta-icon" id="cta-icon">lightbulb</span>
           <span class="cta-text-wrap">
-            <span class="cta-text active" data-icon="lightbulb">Share your ideas</span>
+            <span class="cta-text active" data-icon="lightbulb">Help Build It</span>
             <span class="cta-text" data-icon="chat_bubble">Share your thoughts</span>
             <span class="cta-text" data-icon="timer">Complete in 2 min</span>
           </span>
@@ -57,37 +58,142 @@
       </div>
     </section>
 
-    <!-- HELP SHAPE IT -->
-    <section class="cards">
-      <div class="container">
-        <div class="cards-header">
-          <span>Co-Creation</span>
-          <h2>Help shape Cuppilo</h2>
+    <!-- SURVEY FLOW: 5 questions, one per screen -->
+<section class="survey-flow">
+  <div class="container">
+    <div class="survey-header">
+      <span>Question 1 of 5</span>
+      <h2>What kind of café design dream do you have?</h2>
+      <a href="javascript:void(0)" class="survey-back" onclick="prevSurvey()">← Back</a>
+    </div>
+    
+    <div class="survey-question" id="q1">
+      <div class="question-text">Q1: What kind of café design dream do you have?</div>
+      <div class="options-grid">
+        <div class="option-card" data-q="1" data-answer="A">
+          <span class="material-symbols-outlined">local_cafe</span>
+          <h3>Speciality Coffee</h3>
+          <p>Focus on specialty beans, pour-over, single-origin</p>
         </div>
-        <div class="cards-grid">
-          <div class="card">
-            <span class="material-symbols-outlined card-icon">local_cafe</span>
-            <h3>Drinks</h3>
-            <p>What should we serve?</p>
-          </div>
-          <div class="card">
-            <span class="material-symbols-outlined card-icon">restaurant</span>
-            <h3>Food</h3>
-            <p>What would you order?</p>
-          </div>
-          <div class="card">
-            <span class="material-symbols-outlined card-icon">park</span>
-            <h3>Atmosphere</h3>
-            <p>What should Cuppilo feel like?</p>
-          </div>
-          <div class="card">
-            <span class="material-symbols-outlined card-icon">emoji_objects</span>
-            <h3>Ideas</h3>
-            <p>What would make it special?</p>
-          </div>
+        <div class="option-card" data-q="1" data-answer="B">
+          <span class="material-symbols-outlined">restaurant</span>
+          <h3>Traditional Kerala</h3>
+          <p>Filter coffee, tiffin, local flavors</p>
+        </div>
+        <div class="option-card" data-q="1" data-answer="C">
+          <span class="material-symbols-outlined">storefront</span>
+          <h3>Modern Fusion</h3>
+          <p>Western-style café, continental, fusion dishes</p>
         </div>
       </div>
-    </section>
+    </div>
+    
+    <div class="survey-question" id="q2" style="display:none;">
+      <div class="question-text">Q2: Pick your vibe</div>
+      <div class="options-grid">
+        <div class="option-card" data-q="2" data-answer="A">
+          <span class="material-symbols-outlined">park</span>
+          <h3>Quiet & Work-Friendly</h3>
+          <p>Study spaces, outlets, low noise</p>
+        </div>
+        <div class="option-card" data-q="2" data-answer="B">
+          <span class="material-symbols-outlined">smart_toy</span>
+          <h3>Social & Lively</h3>
+          <p>Group seating, events, music</p>
+        </div>
+        <div class="option-card" data-q="2" data-answer="C">
+          <span class="material-symbols-outlined">favorite_border</span>
+          <h3>Cozy & Intimate</h3>
+          <p>Small space, romantic, dates</p>
+        </div>
+        <div class="option-card" data-q="2" data-answer="D">
+          <span class="material-symbols-outlined">terrain</span>
+          <h3>Open Air & Veranda</h3>
+          <p>Outdoor seating, breeze, nature view</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="survey-question" id="q3" style="display:none;">
+      <div class="question-text">Q3: What should we serve?</div>
+      <div class="options-grid">
+        <div class="option-card" data-q="3" data-answer="A">
+          <span class="material-symbols-outlined">coffee</span>
+          <h3>Pazham Pori</h3>
+          <p>Banana fritter, evening snack</p>
+        </div>
+        <div class="option-card" data-q="3" data-answer="B">
+          <span class="material-symbols-outlined">cake</span>
+          <h3>Unniyappam</h3>
+          <p>Traditional sweet rice cake</p>
+        </div>
+        <div class="option-card" data-q="3" data-answer="C">
+          <span class="material-symbols-outlined">food</span>
+          <h3>Puffs & Sandwiches</h3>
+          <p>Quick bites, variety</p>
+        </div>
+        <div class="option-card" data-q="3" data-answer="D">
+          <span class="material-symbols-outlined">local_dining</span>
+          <h3>Full Meals</h3>
+          <p>Thali, set meals, family style</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="survey-question" id="q4" style="display:none;">
+      <div class="question-text">Q4: Select your tribe to enjoy Cuppilo</div>
+      <div class="options-grid">
+        <div class="option-card" data-q="4" data-answer="A">
+          <span class="material-symbols-outlined">ac_unit</span>
+          <h3>Quiet & Work-Friendly</h3>
+          <p>Focus mode, laptop users, peaceful</p>
+        </div>
+        <div class="option-card" data-q="4" data-answer="B">
+          <span class="material-symbols-outlined">people</span>
+          <h3>Social & Lively</h3>
+          <p>Group gatherings, celebrations</p>
+        </div>
+        <div class="option-card" data-q="4" data-answer="C">
+          <span class="material-symbols-outlined">favorite</span>
+          <h3>Cozy & Intimate</h3>
+          <p>Candlelight, couples, romance</p>
+        </div>
+        <div class="option-card" data-q="4" data-answer="D">
+          <span class="material-symbols-outlined">add</span>
+          <h3>Build Your Own</h3>
+          <p>Custom vibe (enter below)</p>
+          <input type="text" id="custom-vibe" placeholder="Describe your ideal vibe...">
+        </div>
+      </div>
+    </div>
+    
+    <div class="survey-question" id="q5" style="display:none;">
+      <div class="question-text">Q5: What feels fair for a great cup?</div>
+      <div class="options-grid">
+        <div class="option-card" data-q="5" data-answer="A">
+          <span class="material-symbols-outlined">payments</span>
+          <h3>Everyday Affordable</h3>
+          <p>Rs.40-80, accessible daily</p>
+        </div>
+        <div class="option-card" data-q="5" data-answer="B">
+          <span class="material-symbols-outlined">stars</span>
+          <h3>Quality Feels Right</h3>
+          <p>Rs.80-120, premium experience</p>
+        </div>
+        <div class="option-card" data-q="5" data-answer="C">
+          <span class="material-symbols-outlined">emoji_events</span>
+          <h3>Worth the Experience</h3>
+          <p>Rs.120+, special occasion</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="survey-nav">
+      <button class="btn-nav prev" onclick="prevSurvey()">← Prev</button>
+      <button class="btn-nav next" onclick="nextSurvey()">Next →</button>
+    </div>
+  </div>
+</section>
   </main>
 
   <footer class="footer">
@@ -437,6 +543,136 @@
       if (!group) return [];
       var chips = group.querySelectorAll('.form-chip.selected');
       return Array.prototype.map.call(chips, function(c){ return c.getAttribute('data-value'); });
+    }
+
+    /* ── countdown timer ── */
+    function startCountdown() {
+      var target = new Date('2027-01-01T09:00:00+05:30');
+      var el = document.getElementById('hero-countdown');
+      if (!el) return;
+      setInterval(function() {
+        var now = new Date();
+        var diff = target - now;
+        if (diff <= 0) {
+          el.textContent = 'Cuppilo is open!';
+          return;
+        }
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var secs = Math.floor((diff % (1000 * 60)) / 1000);
+        el.textContent = 'Until Cuppilo opens: ' + (days > 0 ? days + ' days ' : '') + (hours > 0 ? hours + 'h ' : '') + (mins > 0 ? mins + 'm ' : '') + secs + 's';
+      }, 1000);
+    }
+    startCountdown();
+
+    /* ── survey flow ─────────────────────────────────────── */
+    var currentQ = 1;
+
+    function showSurvey(q) {
+      document.querySelectorAll('.survey-question').forEach(function(qe){ qe.style.display = 'none'; });
+      document.getElementById('q' + q).style.display = 'block';
+      document.querySelectorAll('.survey-header span')[0].textContent = 'Question ' + q + ' of 5';
+    }
+
+    function nextSurvey() {
+      var sel = document.querySelector('.survey-question[data-q="' + currentQ + '"] .option-card.selected');
+      if (!sel && currentQ < 5) { alert('Please select an option.'); return; }
+      if (currentQ >= 5) {
+        submitSurvey();
+        return;
+      }
+      currentQ++;
+      showSurvey(currentQ);
+    }
+
+    function prevSurvey() {
+      if (currentQ <= 1) return;
+      currentQ--;
+      showSurvey(currentQ);
+    }
+
+    // Select option + auto-advance on single-select, toggle on multi
+    document.querySelectorAll('.option-card').forEach(function(card){
+      card.addEventListener('click', function(){
+        document.querySelectorAll('.option-card.selected').forEach(function(c){ c.classList.remove('selected'); });
+        card.classList.add('selected');
+        if (currentQ === 1 || currentQ === 3 || currentQ === 5) {
+          setTimeout(nextSurvey, 300);
+        }
+      });
+    });
+
+    function submitSurvey() {
+      // collect answers
+      var answers = {};
+      for (var i = 1; i <= 5; i++) {
+        var selected = document.querySelector('.survey-question[data-q="' + i + '"] .option-card.selected');
+        if (selected) {
+          if (i === 4 && document.getElementById('custom-vibe')) {
+            answers['q' + i] = selected.getAttribute('data-answer') + '|' + document.getElementById('custom-vibe').value.trim();
+          } else {
+            answers['q' + i] = selected.getAttribute('data-answer');
+          }
+        }
+      }
+
+      // create founder ID: #00000X format
+      var maxId = 0;
+      var re = /#00000(\d+)/;
+      document.querySelectorAll('.founder-number').forEach(function(el){
+        var m = el.textContent.match(re);
+        if (m && parseInt(m[1]) > maxId) maxId = parseInt(m[1]);
+      });
+      var nextNum = String(maxId + 1).padStart(5, '0');
+      var founderNumber = '#00000' + nextNum;
+
+      // build data object
+      var data = {
+        name: document.getElementById('inputName').value.trim(),
+        frequency: document.querySelector('input[name="frequency"]:checked') ? document.querySelector('input[name="frequency"]:checked').value : '',
+        cafe_type: document.querySelector('.form-opt.selected') ? document.querySelector('.form-opt.selected').getAttribute('data-value') : '',
+        atmosphere: document.querySelector('.form-opt.selected') ? document.querySelector('.form-opt.selected').getAttribute('data-value') : '',
+        drinks: answers.q1 || '',
+        food: answers.q3 || '',
+        price_range: answers.q5 || '',
+        ideas: answers.q2 + ' ' + (answers.q4 || ''),
+        contact: document.getElementById('inputContact').value.trim(),
+        status: 'confirmed',
+        submitted_at: new Date().toISOString(),
+        founder_id: null
+      };
+
+      // POST to Supabase
+      var SUPABASE_URL = 'https://ydugwvdotepndwdmqmxo.supabase.co';
+      var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkdWd3dmRvdGVwbmR3ZG1xbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MDIwODEsImV4cCI6MjEwNTM3ODA4MX0.R_gNOA4TNeKhaOOQ9Wl6P0fjwVO3gp2L6-SH29aC-TM';
+
+      fetch(SUPABASE_URL + '/rest/v1/campaign_responses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        },
+        body: JSON.stringify(data)
+      }).then(function() {
+        // insert founder row
+        return fetch(SUPABASE_URL + '/rest/v1/founders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          },
+          body: JSON.stringify({ founder_number: founderNumber, name: data.name, contact: data.contact })
+        });
+      }).then(function() {
+        // show founder card / thank you
+        window.location.href = 'thank-you.html?founder=' + founderNumber;
+      }).catch(function(err) {
+        console.error(err);
+        alert('Error submitting. Please try again.');
+      });
     }
   </script>
 
