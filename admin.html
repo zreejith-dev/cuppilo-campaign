@@ -208,16 +208,36 @@
     /* ══════════════════════════════════════ */
     /* PASSWORD SECURITY                      */
     /* ══════════════════════════════════════ */
-    var ADMIN_HASH = 'cuppilo2026';  /* Simple hash — change this to your password */
+    var ADMIN_HASH = 'cuppilo2026';
+    var MAX_ATTEMPTS = 3;
+    var LOCKOUT_MS = 15 * 60 * 1000;
+
+    function getAttempts() { return parseInt(localStorage.getItem('cuppilo_login_attempts') || '0'); }
+    function getLockoutUntil() { return parseInt(localStorage.getItem('cuppilo_lockout_until') || '0'); }
+    function resetAttempts() { localStorage.removeItem('cuppilo_login_attempts'); localStorage.removeItem('cuppilo_lockout_until'); }
+    function incrementAttempts() {
+      var a = getAttempts() + 1;
+      localStorage.setItem('cuppilo_login_attempts', a);
+      if (a >= MAX_ATTEMPTS) { localStorage.setItem('cuppilo_lockout_until', Date.now() + LOCKOUT_MS); }
+    }
 
     function doLogin() {
+      if (Date.now() < getLockoutUntil()) {
+        var remaining = Math.ceil((getLockoutUntil() - Date.now()) / 60000);
+        document.getElementById('loginErr').textContent = 'Locked out. Try again in ' + remaining + ' min.';
+        document.getElementById('loginErr').style.display = 'block';
+        return;
+      }
       var pass = document.getElementById('loginPass').value;
       if (pass === ADMIN_HASH) {
+        resetAttempts();
         sessionStorage.setItem('cuppilo_admin_auth', '1');
         document.getElementById('loginGate').style.display = 'none';
         document.getElementById('dashboardWrap').style.display = 'block';
         loadBuilder();
       } else {
+        incrementAttempts();
+        document.getElementById('loginErr').textContent = 'Incorrect password.';
         document.getElementById('loginErr').style.display = 'block';
         document.getElementById('loginPass').value = '';
         document.getElementById('loginPass').focus();
