@@ -3,397 +3,1415 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CUPPILO — Admin Dashboard</title>
+  <title>Admin Console — CUPPILO</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="theme-color" content="#121214"/>
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <script>
+    (function(){
+      try{
+        var t = localStorage.getItem('cuppilo-admin-theme');
+        if(!t){ t = 'dark'; }
+        document.documentElement.setAttribute('data-theme', t);
+      }catch(e){ document.documentElement.setAttribute('data-theme','dark'); }
+    })();
+  </script>
   <link rel="stylesheet" href="css/styles.css"/>
-  <style>
-    body{background:#f4ece8;min-height:100vh}
-    .admin-topbar{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:rgba(255,248,245,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--muted);position:sticky;top:0;z-index:50}
-    .admin-topbar img{height:28px;width:auto}
-    .admin-topbar-title{font-size:.8125rem;font-weight:800;letter-spacing:.08em;color:var(--charcoal);text-transform:uppercase}
-    .admin-wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
-    .admin-title{font-size:1.5rem;font-weight:800;color:var(--charcoal);margin-bottom:.25rem}
-    .admin-sub{font-size:.875rem;color:var(--on-sv);opacity:.6;margin-bottom:2rem}
-
-    /* Login */
-    .login-gate{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.25rem}
-    .login-card{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;padding:2.5rem 2rem;max-width:380px;width:100%;text-align:center}
-    .login-card img{height:36px;margin-bottom:1.5rem}
-    .login-card h2{font-size:1.25rem;font-weight:800;color:var(--charcoal);margin-bottom:.25rem}
-    .login-card p{font-size:.8125rem;color:var(--on-sv);opacity:.6;margin-bottom:1.5rem}
-    .login-card input{width:100%;padding:.875rem 1rem;border:1.5px solid var(--muted);border-radius:12px;font-family:inherit;font-size:.9375rem;background:var(--surface);outline:none;transition:border-color .2s;margin-bottom:1rem}
-    .login-card input:focus{border-color:var(--primary)}
-    .login-card button{width:100%;padding:.875rem;border-radius:12px;border:none;background:var(--primary);color:var(--on-p);font-family:inherit;font-weight:700;font-size:.9375rem;cursor:pointer;transition:background .2s}
-    .login-card button:hover{background:var(--primary-dark)}
-    .login-err{font-size:.8125rem;color:#ba1a1a;margin-top:.5rem;display:none}
-
-    /* Tabs */
-    .admin-tabs{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:2px solid var(--muted);padding-bottom:0}
-    .admin-tab{padding:.75rem 1.25rem;border:none;background:transparent;font-family:inherit;font-size:.875rem;font-weight:700;color:var(--on-sv);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
-    .admin-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
-    .admin-tab:hover{color:var(--primary)}
-    .tab-panel{display:none}
-    .tab-panel.active{display:block}
-
-    /* URL bar */
-    .url-bar{display:flex;gap:.625rem;margin-bottom:2rem}
-    .url-bar input{flex:1;padding:.75rem 1rem;border:1.5px solid var(--muted);border-radius:12px;font-family:inherit;font-size:.875rem;background:var(--surface-card);outline:none;transition:border-color .2s}
-    .url-bar input:focus{border-color:var(--primary)}
-    .url-bar button{padding:.75rem 1.5rem;border-radius:12px;border:none;background:var(--primary);color:var(--on-p);font-family:inherit;font-weight:700;font-size:.875rem;cursor:pointer;white-space:nowrap;transition:background .2s}
-    .url-bar button:hover{background:var(--primary-dark)}
-
-    /* Stats */
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-    .stat-card{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;padding:1.25rem 1rem;text-align:center}
-    .stat-card .stat-num{font-size:1.75rem;font-weight:800;color:var(--primary)}
-    .stat-card .stat-label{font-size:.75rem;font-weight:600;color:var(--on-sv);margin-top:.25rem;text-transform:uppercase;letter-spacing:.04em}
-
-    /* Table */
-    .table-wrap{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;overflow:hidden}
-    .table-wrap table{width:100%;border-collapse:collapse;font-size:.8125rem}
-    .table-wrap th{background:var(--muted);padding:.75rem 1rem;text-align:left;font-weight:700;color:var(--charcoal);white-space:nowrap;position:sticky;top:0}
-    .table-wrap td{padding:.625rem 1rem;border-top:1px solid var(--muted);color:var(--on-sv);vertical-align:top}
-    .table-wrap tr:hover td{background:rgba(135,36,25,.03)}
-    .table-scroll{max-height:60vh;overflow:auto}
-    .empty-msg{text-align:center;padding:3rem 1rem;color:var(--on-sv);opacity:.5;font-size:.9375rem}
-
-    /* Form Builder */
-    .builder-section{background:var(--surface-card);border:1px solid var(--muted);border-radius:1rem;padding:1.5rem;margin-bottom:1.25rem}
-    .builder-section h3{font-size:1rem;font-weight:700;color:var(--charcoal);margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem}
-    .builder-section h3 .material-symbols-outlined{font-size:20px;color:var(--primary)}
-    .builder-section>p{font-size:.8125rem;color:var(--on-sv);opacity:.6;margin-bottom:1rem}
-    .builder-items{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
-    .builder-item{display:inline-flex;align-items:center;gap:.375rem;padding:.5rem .875rem;border:1.5px solid var(--muted);border-radius:9999px;font-size:.8125rem;font-weight:600;color:var(--on-sv);background:var(--surface)}
-    .builder-item .remove-btn{width:20px;height:20px;border-radius:50%;border:none;background:rgba(186,26,26,.1);color:#ba1a1a;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:background .2s;line-height:1}
-    .builder-item .remove-btn:hover{background:rgba(186,26,26,.25)}
-    .builder-add{display:flex;gap:.5rem}
-    .builder-add input{flex:1;padding:.625rem .875rem;border:1.5px solid var(--muted);border-radius:10px;font-family:inherit;font-size:.8125rem;background:var(--surface);outline:none;transition:border-color .2s}
-    .builder-add input:focus{border-color:var(--primary)}
-    .builder-add button{padding:.625rem 1rem;border-radius:10px;border:none;background:var(--primary);color:var(--on-p);font-family:inherit;font-weight:700;font-size:.8125rem;cursor:pointer;white-space:nowrap;transition:background .2s}
-    .builder-add button:hover{background:var(--primary-dark)}
-    .builder-actions{display:flex;gap:.75rem;margin-top:1.25rem}
-    .builder-actions button{padding:.75rem 1.5rem;border-radius:12px;border:none;font-family:inherit;font-weight:700;font-size:.875rem;cursor:pointer;transition:all .2s}
-    .btn-publish{background:var(--primary);color:var(--on-p)}
-    .btn-publish:hover{background:var(--primary-dark)}
-    .btn-reset{background:var(--muted);color:var(--on-sv)}
-    .btn-reset:hover{background:#d6cfc6}
-    .builder-status{font-size:.8125rem;color:var(--success);font-weight:600;margin-top:.75rem;display:none}
-
-    @media(max-width:640px){
-      .stats{grid-template-columns:1fr 1fr}
-      .url-bar{flex-direction:column}
-      .admin-tabs{overflow-x:auto}
-    }
-  </style>
 </head>
-<body>
+<body class="admin-body">
 
-  <!-- LOGIN GATE -->
-  <div class="login-gate" id="loginGate">
-    <div class="login-card">
-      <img src="img/logo.png" alt="CUPPILO"/>
-      <h2>Admin Dashboard</h2>
-      <p>Enter the admin password to continue</p>
-      <input type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
-      <button onclick="doLogin()">Sign In</button>
-      <p class="login-err" id="loginErr">Incorrect password. Try again.</p>
-    </div>
+  <!-- ═══════════ AUTH SCREEN ═══════════ -->
+  <div class="auth-screen" id="authScreen">
+    <form class="auth-card" id="authForm" novalidate>
+      <div class="auth-brand">
+        <img src="img/logo-icon.png" alt="CUPPILO"/>
+        <h1>Admin Console</h1>
+        <p>Sign in to the Cuppilo campaign control room</p>
+      </div>
+
+      <div class="auth-error" id="authError">
+        <span class="material-symbols-outlined">error</span>
+        <span id="authErrorText">Incorrect email or password.</span>
+      </div>
+
+      <div class="field">
+        <label for="authEmail">Email</label>
+        <input class="input" id="authEmail" type="email" placeholder="you@cuppilo.cafe" autocomplete="username"/>
+      </div>
+      <div class="field">
+        <label for="authPassword">Password</label>
+        <input class="input" id="authPassword" type="password" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="authSubmit" type="submit">
+        <span class="material-symbols-outlined">lock</span>
+        <span id="authSubmitLabel">Sign in</span>
+      </button>
+
+      <p class="auth-foot">Secure session &middot; refreshes automatically</p>
+      <p class="auth-foot"><a href="index.html" style="color:var(--text-4);font-weight:700">&larr; Back to campaign</a></p>
+    </form>
   </div>
 
-  <!-- DASHBOARD (hidden until login) -->
-  <div id="dashboardWrap" style="display:none">
-    <header class="admin-topbar">
-      <img src="img/logo.png" alt="CUPPILO"/>
-      <span class="admin-topbar-title">Admin</span>
-    </header>
+  <!-- ═══════════ CONSOLE ═══════════ -->
+  <div class="console" id="console">
 
-    <div class="admin-wrap">
-      <h1 class="admin-title">CUPPILO Campaign Dashboard</h1>
-      <p class="admin-sub">Manage your campaign form and view all community responses.</p>
-
-      <div class="admin-tabs">
-        <button class="admin-tab active" onclick="switchTab('responses',this)">Responses</button>
-        <button class="admin-tab" onclick="switchTab('builder',this)">Form Builder</button>
+    <div class="console-top">
+      <div class="console-brand">
+        <span class="cb-name">Cuppilo</span>
+        <span class="cb-sub">Admin Console</span>
       </div>
-
-      <!-- TAB: Responses -->
-      <div class="tab-panel active" id="tab-responses">
-        <div class="url-bar">
-          <button onclick="fetchAll()" style="flex:1">Load Responses from Supabase</button>
-        </div>
-
-        <div class="stats">
-          <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Responses</div></div>
-          <div class="stat-card"><div class="stat-num" id="statCafe">—</div><div class="stat-label">Top Cafe</div></div>
-          <div class="stat-card"><div class="stat-num" id="statAtmos">—</div><div class="stat-label">Top Vibe</div></div>
-          <div class="stat-card"><div class="stat-num" id="statPrice">—</div><div class="stat-label">Top Price</div></div>
-        </div>
-
-        <div class="table-wrap">
-          <div class="table-scroll">
-            <table>
-              <thead><tr><th>#</th><th>Time</th><th>Name</th><th>Frequency</th><th>Cafe</th><th>Vibe</th><th>Drinks</th><th>Food</th><th>Price</th><th>Ideas</th><th>Contact</th></tr></thead>
-              <tbody id="tableBody"><tr><td colspan="11" class="empty-msg">Enter your Apps Script URL and click Load Data.</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB: Form Builder -->
-      <div class="tab-panel" id="tab-builder">
-        <p style="font-size:.875rem;color:var(--on-sv);opacity:.6;margin-bottom:1.5rem">Add or remove items from the campaign form. Changes are published to the live form instantly via localStorage. No code editing needed.</p>
-
-        <div class="builder-section">
-          <h3><span class="material-symbols-outlined">local_cafe</span> Drinks</h3>
-          <p>Multi-select chips on Step 3 of the form</p>
-          <div class="builder-items" id="builderDrinks"></div>
-          <div class="builder-add">
-            <input type="text" id="newDrink" placeholder="Add a drink (e.g. Iced Latte)" onkeydown="if(event.key==='Enter')addItem('drinks')"/>
-            <button onclick="addItem('drinks')">Add</button>
-          </div>
-        </div>
-
-        <div class="builder-section">
-          <h3><span class="material-symbols-outlined">restaurant</span> Food</h3>
-          <p>Multi-select chips on Step 3 of the form</p>
-          <div class="builder-items" id="builderFood"></div>
-          <div class="builder-add">
-            <input type="text" id="newFood" placeholder="Add a food item (e.g. Croissant)" onkeydown="if(event.key==='Enter')addItem('food')"/>
-            <button onclick="addItem('food')">Add</button>
-          </div>
-        </div>
-
-        <div class="builder-section">
-          <h3><span class="material-symbols-outlined">storefront</span> Cafe Types</h3>
-          <p>Single-select options on Step 2</p>
-          <div class="builder-items" id="builderCafeTypes"></div>
-          <div class="builder-add">
-            <input type="text" id="newCafeType" placeholder="Add a cafe type" onkeydown="if(event.key==='Enter')addItem('cafeTypes')"/>
-            <button onclick="addItem('cafeTypes')">Add</button>
-          </div>
-        </div>
-
-        <div class="builder-section">
-          <h3><span class="material-symbols-outlined">park</span> Atmospheres</h3>
-          <p>Single-select options on Step 2</p>
-          <div class="builder-items" id="builderAtmospheres"></div>
-          <div class="builder-add">
-            <input type="text" id="newAtmosphere" placeholder="Add an atmosphere" onkeydown="if(event.key==='Enter')addItem('atmospheres')"/>
-            <button onclick="addItem('atmospheres')">Add</button>
-          </div>
-        </div>
-
-        <div class="builder-section">
-          <h3><span class="material-symbols-outlined">payments</span> Price Ranges</h3>
-          <p>Single-select options on Step 4</p>
-          <div class="builder-items" id="builderPrices"></div>
-          <div class="builder-add">
-            <input type="text" id="newPrice" placeholder="Add a price range (e.g. Rs.200+)" onkeydown="if(event.key==='Enter')addItem('prices')"/>
-            <button onclick="addItem('prices')">Add</button>
-          </div>
-        </div>
-
-        <div class="builder-actions">
-          <button class="btn-publish" onclick="publishConfig()">
-            <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">upload</span>
-            Publish to Live Form
-          </button>
-          <button class="btn-reset" onclick="resetConfig()">Reset to Default</button>
-        </div>
-        <p class="builder-status" id="builderStatus">Published! The live form will now use your updated items.</p>
+      <div class="console-actions">
+        <button class="icon-btn" id="refreshBtn" type="button" aria-label="Refresh data" title="Refresh data">
+          <span class="material-symbols-outlined">sync</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle colour theme">
+          <span class="t-sun"><span class="material-symbols-outlined">light_mode</span></span>
+          <span class="t-moon"><span class="material-symbols-outlined">dark_mode</span></span>
+        </button>
+        <button class="icon-btn" id="logoutBtn" type="button" aria-label="Sign out" title="Sign out">
+          <span class="material-symbols-outlined">logout</span>
+        </button>
       </div>
     </div>
+
+    <div class="console-main">
+
+      <!-- ───────── OVERVIEW ───────── -->
+      <section class="console-screen on" id="screen-overview">
+        <div class="live-row">
+          <div class="live-tag"><span class="dot"></span>Live telemetry</div>
+          <div class="live-sub" id="syncLabel">Connecting&hellip;</div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <div>
+              <h2>Campaign Pulse</h2>
+              <div class="pt-sub">Fall 2026 Discovery &amp; Tasting Survey</div>
+            </div>
+          </div>
+          <div class="range-row" id="rangeRow">
+            <button class="chip" type="button" data-range="today">Today</button>
+            <button class="chip" type="button" data-range="week">Last 7 days</button>
+            <button class="chip on" type="button" data-range="all">All time</button>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi">
+              <div class="kpi-top">
+                <span class="kpi-label">Total responses</span>
+                <span class="kpi-icon"><span class="material-symbols-outlined">rate_review</span></span>
+              </div>
+              <div class="kpi-value" id="kpiTotal">0</div>
+              <div class="kpi-delta" id="kpiTotalSub">All time</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <span class="kpi-label">Completion rate</span>
+                <span class="kpi-icon"><span class="material-symbols-outlined">task_alt</span></span>
+              </div>
+              <div class="kpi-value" id="kpiCompletion">0%</div>
+              <div class="kpi-delta" id="kpiCompletionSub">0 complete</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <span class="kpi-label">Vouchers issued</span>
+                <span class="kpi-icon"><span class="material-symbols-outlined">confirmation_number</span></span>
+              </div>
+              <div class="kpi-value" id="kpiIssued">0</div>
+              <div class="kpi-delta" id="kpiIssuedSub">Ready to claim</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <span class="kpi-label">Redeemed</span>
+                <span class="kpi-icon"><span class="material-symbols-outlined">storefront</span></span>
+              </div>
+              <div class="kpi-value" id="kpiRedeemed">0</div>
+              <div class="kpi-delta" id="kpiRedeemedSub">0% of issued</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <div>
+              <h2>Traffic &amp; Submissions</h2>
+              <div class="pt-sub">Real-time intake curve</div>
+            </div>
+            <span class="link-btn"><span class="material-symbols-outlined">query_stats</span>Rush hours</span>
+          </div>
+          <div class="chart" id="chart"></div>
+          <div class="chart-x" id="chartX"></div>
+          <div class="chart-note">
+            <span>Peak window</span>
+            <span><b id="peakLabel">No traffic yet</b> <span id="peakSub"></span></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <div>
+              <h2>Cafe Identity Preference</h2>
+              <div class="pt-sub" id="prioritySub">Direct feedback rank</div>
+            </div>
+          </div>
+          <div class="bar-list" id="priorityList"></div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <div>
+              <h2>Recent Telemetry</h2>
+              <div class="pt-sub">Live stream of new responses</div>
+            </div>
+            <button class="link-btn" type="button" data-goto="surveys">Export log<span class="material-symbols-outlined">arrow_outward</span></button>
+          </div>
+          <div class="activity" id="activityList"></div>
+        </div>
+      </section>
+
+      <!-- ───────── SURVEYS ───────── -->
+      <section class="console-screen" id="screen-surveys">
+        <div class="live-row">
+          <div class="live-tag"><span class="dot"></span>Live pulse survey</div>
+          <div class="live-sub">Menu &amp; ambience</div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-top">
+              <span class="kpi-label">Verified submissions</span>
+              <span class="kpi-icon"><span class="material-symbols-outlined">how_to_reg</span></span>
+            </div>
+            <div class="kpi-value" id="svTotal">0</div>
+            <div class="kpi-delta" id="svTotalSub">Total guest answers</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-top">
+              <span class="kpi-label">Completion rate</span>
+              <span class="kpi-icon"><span class="material-symbols-outlined">trending_up</span></span>
+            </div>
+            <div class="kpi-value" id="svCompletion">0%</div>
+            <div class="kpi-delta" id="svCompletionSub">Fully answered</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="search-row">
+            <div class="search-box">
+              <span class="material-symbols-outlined">search</span>
+              <input id="respSearch" type="search" placeholder="Search name, contact or answer" aria-label="Search responses"/>
+            </div>
+          </div>
+          <div class="filter-chips" id="respFilters" style="margin-top:12px">
+            <button class="chip on" type="button" data-filter="all">All <span class="cnt" id="cntAll">0</span></button>
+            <button class="chip" type="button" data-filter="complete">Completed <span class="cnt" id="cntComplete">0</span></button>
+            <button class="chip" type="button" data-filter="incomplete">Incomplete <span class="cnt" id="cntIncomplete">0</span></button>
+            <button class="chip" type="button" data-filter="contact">With contact <span class="cnt" id="cntContact">0</span></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <div>
+              <h2>Question Breakdown</h2>
+              <div class="pt-sub" id="breakdownSub">5 modules</div>
+            </div>
+            <span class="link-btn"><span class="material-symbols-outlined">bar_chart</span>Live</span>
+          </div>
+          <div id="breakdownList" style="display:flex;flex-direction:column;gap:10px"></div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <div>
+              <h2>Response Stream</h2>
+              <div class="pt-sub">Sorted by recent</div>
+            </div>
+          </div>
+          <div class="stream" id="streamList"></div>
+        </div>
+
+        <div class="export-bar">
+          <h3>Export data feed</h3>
+          <p>Every response, exactly as stored in Supabase.</p>
+          <div class="export-actions">
+            <button class="btn btn-primary" type="button" id="exportCsv">
+              <span class="material-symbols-outlined">file_download</span>Export CSV
+            </button>
+            <button class="btn btn-secondary" type="button" id="exportJson">
+              <span class="material-symbols-outlined">data_object</span>Export JSON
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── VOUCHERS ───────── -->
+      <section class="console-screen" id="screen-vouchers">
+        <div class="live-row">
+          <div class="live-tag"><span class="dot"></span>Active campaign</div>
+          <div class="live-sub">CUPPILO-ROAST &middot; Main Street Flagship</div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-top">
+              <span class="kpi-label">Total generated</span>
+              <span class="kpi-icon"><span class="material-symbols-outlined">confirmation_number</span></span>
+            </div>
+            <div class="kpi-value" id="voTotal">0</div>
+            <div class="kpi-delta" id="voTotalSub">Auto-issued on survey</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-top">
+              <span class="kpi-label">Redeemed</span>
+              <span class="kpi-icon"><span class="material-symbols-outlined">verified</span></span>
+            </div>
+            <div class="kpi-value" id="voRedeemed">0</div>
+            <div class="kpi-delta" id="voRedeemedSub">In-store</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-top">
+              <span class="kpi-label">Unclaimed</span>
+              <span class="kpi-icon"><span class="material-symbols-outlined">inventory_2</span></span>
+            </div>
+            <div class="kpi-value" id="voUnclaimed">0</div>
+            <div class="kpi-delta" id="voUnclaimedSub">Ready to redeem</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-top">
+              <span class="kpi-label">Redeem rate</span>
+              <span class="kpi-icon"><span class="material-symbols-outlined">pie_chart</span></span>
+            </div>
+            <div class="kpi-value" id="voRate">0%</div>
+            <div class="kpi-delta" id="voRateSub">Across all counters</div>
+          </div>
+        </div>
+
+        <div class="validator">
+          <div class="vd-mode">Counter point-of-sale mode</div>
+          <div class="vd-point">Voucher validator</div>
+          <div class="vd-status">
+            <span class="vd-state">
+              <span class="material-symbols-outlined">check_circle</span>
+              <span id="counterLabel">Counter #1</span>
+            </span>
+            <span class="vd-counter" id="todayCount">0 redeemed today</span>
+          </div>
+          <input class="input" id="voucherInput" type="text" placeholder="CUPPILO-ROAST-00001" autocomplete="off" spellcheck="false"/>
+          <div class="validator-result" id="vResult">
+            <span class="material-symbols-outlined" id="vResultIcon">check_circle</span>
+            <span id="vResultText"></span>
+          </div>
+          <button class="btn btn-primary btn-block" type="button" id="verifyBtn">
+            <span class="material-symbols-outlined">task_alt</span>
+            <span id="verifyLabel">Verify &amp; Redeem</span>
+          </button>
+        </div>
+
+        <div class="rules">
+          <div class="rule">
+            <div class="rule-info">
+              <h4>Perk offering</h4>
+              <p>Free Specialty Pour-Over or Nitro Cold Brew</p>
+            </div>
+          </div>
+          <div class="rule">
+            <div class="rule-info">
+              <h4>Campaign expiry</h4>
+              <p>31 Dec 2026 &middot; 1 claim per founder</p>
+            </div>
+          </div>
+          <div class="rule">
+            <div class="rule-info">
+              <h4>Auto-generate on survey</h4>
+              <p>Issue an instant perk when a survey is submitted</p>
+            </div>
+            <button class="switch" type="button" role="switch" aria-checked="true" data-rule="autoGenerate" aria-label="Auto-generate on survey"></button>
+          </div>
+          <div class="rule">
+            <div class="rule-info">
+              <h4>Counter confirmation</h4>
+              <p>Show a success toast after every redemption</p>
+            </div>
+            <button class="switch" type="button" role="switch" aria-checked="true" data-rule="counterToast" aria-label="Counter confirmation"></button>
+          </div>
+          <div class="rule">
+            <div class="rule-info">
+              <h4>Daily redemption throttling</h4>
+              <p>Cap store redemptions at 50 per day</p>
+            </div>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-rule="throttle" aria-label="Daily redemption throttling"></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-title">
+            <div>
+              <h2>Recent Redemptions</h2>
+              <div class="pt-sub">Live feed of verified perks</div>
+            </div>
+            <span class="link-btn"><span class="material-symbols-outlined">autorenew</span>Live</span>
+          </div>
+          <div class="redeem-list" id="redeemList"></div>
+        </div>
+
+        <div class="export-bar">
+          <h3>Redemptions audit log</h3>
+          <p>Compliant with roastery auditing standards.</p>
+          <div class="export-actions">
+            <button class="btn btn-secondary" type="button" id="exportAudit">
+              <span class="material-symbols-outlined">download</span>Download CSV
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── SETTINGS ───────── -->
+      <section class="console-screen" id="screen-settings">
+        <div class="setting-card">
+          <h3>Session</h3>
+          <p class="sc-desc">Authenticated against Supabase Auth. The token refreshes before it expires.</p>
+          <div class="setting-row"><span class="sr-k">Signed in as</span><span class="sr-v" id="setEmail">&mdash;</span></div>
+          <div class="setting-row"><span class="sr-k">Role</span><span class="sr-v">authenticated</span></div>
+          <div class="setting-row"><span class="sr-k">Token expires</span><span class="sr-v" id="setExpiry">&mdash;</span></div>
+          <button class="btn btn-secondary btn-block" type="button" id="signOutBtn" style="margin-top:14px">
+            <span class="material-symbols-outlined">logout</span>Sign out
+          </button>
+        </div>
+
+        <div class="setting-card">
+          <h3>Campaign</h3>
+          <p class="sc-desc">Read-only campaign constants used across the site.</p>
+          <div class="setting-row"><span class="sr-k">Soft opening</span><span class="sr-v">1 Jan 2027, 9:00 AM IST</span></div>
+          <div class="setting-row"><span class="sr-k">Campaign expiry</span><span class="sr-v">31 Dec 2026</span></div>
+          <div class="setting-row"><span class="sr-k">Voucher prefix</span><span class="sr-v">CUPPILO-ROAST-</span></div>
+          <div class="setting-row"><span class="sr-k">Default reward</span><span class="sr-v">Pour-Over or Nitro Cold Brew</span></div>
+          <div class="setting-row"><span class="sr-k">Founder number format</span><span class="sr-v">#000000</span></div>
+        </div>
+
+        <div class="setting-card">
+          <h3>Data</h3>
+          <p class="sc-desc">Everything below is exported from the live Supabase tables.</p>
+          <div class="export-actions">
+            <button class="btn btn-secondary" type="button" id="setCsv">
+              <span class="material-symbols-outlined">file_download</span>Responses CSV
+            </button>
+            <button class="btn btn-secondary" type="button" id="setJson">
+              <span class="material-symbols-outlined">data_object</span>Responses JSON
+            </button>
+            <button class="btn btn-secondary" type="button" id="setVoucherCsv">
+              <span class="material-symbols-outlined">confirmation_number</span>Vouchers CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="setting-card">
+          <h3>Local preferences</h3>
+          <p class="sc-desc">Theme and console rules are stored in this browser only.</p>
+          <div class="setting-row"><span class="sr-k">Theme</span><span class="sr-v" id="setTheme">&mdash;</span></div>
+          <button class="btn btn-ghost btn-block" type="button" id="resetPrefs" style="margin-top:12px">Reset local preferences</button>
+        </div>
+
+        <p class="copyright">&copy; 2026 Cuppilo Cafe &middot; Admin Console</p>
+      </section>
+
+    </div>
+
+    <nav class="tabbar" aria-label="Admin sections">
+      <div class="tabbar-inner">
+        <button class="tab on" type="button" data-screen="overview">
+          <span class="material-symbols-outlined">dashboard</span><span class="lbl">Overview</span>
+        </button>
+        <button class="tab" type="button" data-screen="surveys">
+          <span class="material-symbols-outlined">rate_review</span><span class="lbl">Surveys</span>
+        </button>
+        <button class="tab" type="button" data-screen="vouchers">
+          <span class="material-symbols-outlined">confirmation_number</span><span class="lbl">Vouchers</span>
+        </button>
+        <button class="tab" type="button" data-screen="settings">
+          <span class="material-symbols-outlined">settings</span><span class="lbl">Settings</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="material-symbols-outlined" id="toastIcon">check_circle</span>
+    <span id="toastText">Saved</span>
   </div>
 
   <script>
-    /* ══════════════════════════════════════ */
-    /* PASSWORD SECURITY                      */
-    /* ══════════════════════════════════════ */
-    var ADMIN_HASH = 'cuppilo2026';
-    var MAX_ATTEMPTS = 3;
-    var LOCKOUT_MS = 15 * 60 * 1000;
+  (function(){
+    'use strict';
 
-    function getAttempts() { return parseInt(localStorage.getItem('cuppilo_login_attempts') || '0'); }
-    function getLockoutUntil() { return parseInt(localStorage.getItem('cuppilo_lockout_until') || '0'); }
-    function resetAttempts() { localStorage.removeItem('cuppilo_login_attempts'); localStorage.removeItem('cuppilo_lockout_until'); }
-    function incrementAttempts() {
-      var a = getAttempts() + 1;
-      localStorage.setItem('cuppilo_login_attempts', a);
-      if (a >= MAX_ATTEMPTS) { localStorage.setItem('cuppilo_lockout_until', Date.now() + LOCKOUT_MS); }
+    var SUPABASE_URL = 'https://ydugwvdotepndwdmqmxo.supabase.co';
+    var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkdWd3dmRvdGVwbmR3ZG1xbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MDIwODEsImV4cCI6MjEwNTM3ODA4MX0.R_gNOA4TNeKhaOOQ9Wl6P0fjwVO3gp2L6-SH29aC-TM';
+    var SESSION_KEY = 'cuppilo_admin_session';
+    var RULES_KEY = 'cuppilo_admin_rules';
+    var ATTEMPTS_KEY = 'cuppilo_login_attempts';
+    var LOCK_KEY = 'cuppilo_lockout_until';
+
+    var QUESTIONS = [
+      { key:'cafe_type',   cat:'Question 01', label:'Cafe Identity',        opts:['Speciality Coffee','Traditional Kerala','Modern Fusion'] },
+      { key:'atmosphere',  cat:'Question 02', label:'Preferred Vibe',       opts:['Quiet & Work-Friendly','Social & Lively','Cozy & Intimate','Open Air & Veranda'] },
+      { key:'food',        cat:'Question 03', label:'Menu Pick',            opts:['Pazham Pori','Unniyappam','Puffs & Sandwiches','Full Meals'] },
+      { key:'ideas',       cat:'Question 04', label:'Your Tribe',           opts:['Quiet & Work-Friendly','Social & Lively','Cozy & Intimate','Build Your Own'] },
+      { key:'price_range', cat:'Question 05', label:'Fair Pricing',         opts:['Everyday Affordable','Quality Feels Right','Worth the Experience'] }
+    ];
+
+    var state = {
+      session: null,
+      responses: [],
+      founders: [],
+      vouchers: [],
+      range: 'all',
+      filter: 'all',
+      search: '',
+      screen: 'overview'
+    };
+
+    /* ───────── helpers ───────── */
+    function $(id){ return document.getElementById(id); }
+    function esc(s){
+      if(s === null || s === undefined) return '';
+      var d = document.createElement('div');
+      d.textContent = String(s);
+      return d.innerHTML;
+    }
+    function num(n){ return (n || 0).toLocaleString('en-IN'); }
+    function pct(a, b){ return b > 0 ? Math.round((a / b) * 100) : 0; }
+
+    var toastTimer;
+    function toast(msg, ok){
+      var el = $('toast');
+      $('toastText').textContent = msg;
+      $('toastIcon').textContent = ok === false ? 'error' : 'check_circle';
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 3000);
     }
 
-    function doLogin() {
-      if (Date.now() < getLockoutUntil()) {
-        var remaining = Math.ceil((getLockoutUntil() - Date.now()) / 60000);
-        document.getElementById('loginErr').textContent = 'Locked out. Try again in ' + remaining + ' min.';
-        document.getElementById('loginErr').style.display = 'block';
+    function setTheme(t){
+      document.documentElement.setAttribute('data-theme', t);
+      try{ localStorage.setItem('cuppilo-admin-theme', t); }catch(e){}
+      var label = $('setTheme');
+      if(label) label.textContent = t === 'dark' ? 'Dark (Obsidian)' : 'Light (Crimson)';
+    }
+
+    function timeAgo(iso){
+      if(!iso) return '—';
+      var diff = Date.now() - new Date(iso).getTime();
+      if(isNaN(diff)) return '—';
+      var m = Math.round(diff / 60000);
+      if(m < 1) return 'just now';
+      if(m < 60) return m + 'm ago';
+      var h = Math.round(m / 60);
+      if(h < 24) return h + 'h ago';
+      var d = Math.round(h / 24);
+      if(d < 30) return d + 'd ago';
+      return new Date(iso).toLocaleDateString('en-IN');
+    }
+
+    function shortDate(iso){
+      if(!iso) return '—';
+      var d = new Date(iso);
+      if(isNaN(d.getTime())) return '—';
+      return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short' }) + ' · ' +
+             d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+    }
+
+    function download(filename, content, mime){
+      var blob = new Blob([content], { type: mime || 'text/csv;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    }
+
+    function csvCell(v){
+      if(v === null || v === undefined) return '';
+      var s = String(v);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+
+    /* ───────── auth ───────── */
+    function loadSession(){
+      try{
+        var raw = sessionStorage.getItem(SESSION_KEY);
+        if(!raw) return null;
+        var s = JSON.parse(raw);
+        if(!s || (!s.access_token && !s.refresh_token)) return null;
+        return s;
+      }catch(e){ return null; }
+    }
+
+    function saveSession(s){
+      try{
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+      }catch(e){}
+    }
+
+    function clearSession(){
+      try{
+        sessionStorage.removeItem(SESSION_KEY);
+      }catch(e){}
+      state.session = null;
+    }
+
+    function attempts(){
+      return parseInt(localStorage.getItem(ATTEMPTS_KEY) || '0', 10);
+    }
+    function bumpAttempts(){
+      var n = attempts() + 1;
+      try{ localStorage.setItem(ATTEMPTS_KEY, String(n)); }catch(e){}
+      return n;
+    }
+    function lockUntil(){
+      return parseInt(localStorage.getItem(LOCK_KEY) || '0', 10);
+    }
+    function resetAttempts(){
+      try{
+        localStorage.removeItem(ATTEMPTS_KEY);
+        localStorage.removeItem(LOCK_KEY);
+      }catch(e){}
+    }
+
+    function showAuthError(msg){
+      $('authErrorText').textContent = msg;
+      $('authError').classList.add('show');
+    }
+    function hideAuthError(){ $('authError').classList.remove('show'); }
+
+    function login(email, password){
+      hideAuthError();
+      var btn = $('authSubmit');
+      btn.disabled = true;
+      $('authSubmitLabel').textContent = 'Signing in…';
+
+      fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': ANON_KEY
+        },
+        body: JSON.stringify({ email: email, password: password })
+      }).then(function(r){
+        return r.json().then(function(data){ return { ok: r.ok, data: data }; });
+      }).then(function(res){
+        btn.disabled = false;
+        $('authSubmitLabel').textContent = 'Sign in';
+        if(!res.ok){
+          var tries = bumpAttempts();
+          var msg = (res.data && res.data.msg) || 'Incorrect email or password.';
+          if(/rate/i.test(msg)) msg = 'Too many attempts. Try again in a minute.';
+          if(tries >= 5){
+            try{
+              localStorage.setItem(LOCK_KEY, String(Date.now() + 60000));
+              localStorage.removeItem(ATTEMPTS_KEY);
+            }catch(e){}
+            msg = 'Too many failed attempts. Try again in 60 seconds.';
+          }
+          showAuthError(msg);
+          return;
+        }
+        resetAttempts();
+        state.session = {
+          access_token: res.data.access_token,
+          refresh_token: res.data.refresh_token,
+          expires_at: Date.now() + ((res.data.expires_in || 3600) * 1000),
+          email: (res.data.user && res.data.user.email) || email
+        };
+        saveSession(state.session);
+        enterConsole();
+      }).catch(function(){
+        btn.disabled = false;
+        $('authSubmitLabel').textContent = 'Sign in';
+        showAuthError('Could not reach the server. Check your connection.');
+      });
+    }
+
+    function refreshSession(){
+      if(!state.session || !state.session.refresh_token) return Promise.reject(new Error('no session'));
+      return fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': ANON_KEY },
+        body: JSON.stringify({ refresh_token: state.session.refresh_token })
+      }).then(function(r){
+        return r.json().then(function(data){ return { ok: r.ok, data: data }; });
+      }).then(function(res){
+        if(!res.ok) throw new Error('refresh failed');
+        state.session.access_token = res.data.access_token;
+        state.session.refresh_token = res.data.refresh_token || state.session.refresh_token;
+        state.session.expires_at = Date.now() + ((res.data.expires_in || 3600) * 1000);
+        saveSession(state.session);
+        return state.session;
+      });
+    }
+
+    function ensureToken(){
+      if(state.session && state.session.access_token &&
+         (!state.session.expires_at || Date.now() < state.session.expires_at - 30000)){
+        return Promise.resolve(state.session);
+      }
+      return refreshSession().catch(function(){
+        logout('Your session expired. Please sign in again.');
+        return Promise.reject(new Error('unauthorised'));
+      });
+    }
+
+    function api(path, opts){
+      opts = opts || {};
+      var doFetch = function(){
+        var headers = {
+          'Content-Type': 'application/json',
+          'apikey': ANON_KEY,
+          'Authorization': 'Bearer ' + state.session.access_token
+        };
+        if(opts.prefer) headers['Prefer'] = opts.prefer;
+        return fetch(SUPABASE_URL + path, {
+          method: opts.method || 'GET',
+          headers: headers,
+          body: opts.body ? JSON.stringify(opts.body) : undefined
+        });
+      };
+
+      return ensureToken().then(function(){ return doFetch(); }).then(function(r){
+        if(r.status !== 401) return r;
+        return refreshSession().then(function(){
+          return doFetch();
+        }).catch(function(){
+          logout('Your session expired. Please sign in again.');
+          return Promise.reject(new Error('unauthorised'));
+        });
+      }).then(function(r){
+        if(opts.raw) return r;
+        if(!r.ok){
+          return r.text().then(function(t){ throw new Error(t || r.statusText); });
+        }
+        var ct = r.headers.get('content-type') || '';
+        if(r.status === 204 || ct.indexOf('json') === -1) return null;
+        return r.json();
+      });
+    }
+
+    function logout(msg){
+      clearSession();
+      $('console').classList.remove('on');
+      $('authScreen').style.display = 'flex';
+      if(msg) showAuthError(msg);
+    }
+
+    function enterConsole(){
+      $('authScreen').style.display = 'none';
+      $('console').classList.add('on');
+      $('setEmail').textContent = state.session.email || '—';
+      $('setExpiry').textContent = state.session.expires_at
+        ? new Date(state.session.expires_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })
+        : '—';
+      setTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+      loadAll(true);
+    }
+
+    /* ───────── data ───────── */
+    function loadAll(showToast){
+      $('syncLabel').textContent = 'Syncing…';
+      return Promise.all([
+        api('/rest/v1/campaign_responses?select=*&order=created_at.desc'),
+        api('/rest/v1/founders?select=*&order=founder_number.desc'),
+        api('/rest/v1/vouchers?select=*&order=created_at.desc')
+      ]).then(function(res){
+        state.responses = Array.isArray(res[0]) ? res[0] : [];
+        state.founders  = Array.isArray(res[1]) ? res[1] : [];
+        state.vouchers  = Array.isArray(res[2]) ? res[2] : [];
+        renderAll();
+        if(state.session && state.session.expires_at){
+          $('setExpiry').textContent =
+            new Date(state.session.expires_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+        }
+        $('syncLabel').textContent = 'Synced ' + new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+        if(showToast) toast('Live data synced.');
+      }).catch(function(err){
+        if(err && err.message === 'unauthorised') return;
+        $('syncLabel').textContent = 'Sync failed';
+        toast('Could not load data.', false);
+      });
+    }
+
+    function isComplete(r){
+      return !!(r.name && r.cafe_type && r.atmosphere && r.food && r.ideas && r.price_range);
+    }
+
+    function inRange(r){
+      if(state.range === 'all') return true;
+      var t = new Date(r.created_at || r.submitted_at);
+      if(isNaN(t.getTime())) return false;
+      var now = new Date();
+      if(state.range === 'today'){
+        return t.getFullYear() === now.getFullYear() &&
+               t.getMonth() === now.getMonth() &&
+               t.getDate() === now.getDate();
+      }
+      return (now.getTime() - t.getTime()) <= 7 * 86400000;
+    }
+
+    function distribution(rows, q){
+      var counts = {};
+      var answered = 0;
+      q.opts.forEach(function(o){ counts[o] = 0; });
+      var other = 0;
+      rows.forEach(function(r){
+        var v = (r[q.key] || '').trim();
+        if(!v) return;
+        answered++;
+        if(Object.prototype.hasOwnProperty.call(counts, v)) counts[v]++;
+        else other++;
+      });
+      var list = q.opts.map(function(o){ return { name:o, count:counts[o] }; });
+      if(other > 0) list.push({ name:'Other / custom', count:other });
+      list.sort(function(a, b){ return b.count - a.count; });
+      return { list: list, answered: answered };
+    }
+
+    /* ───────── render: overview ───────── */
+    function renderOverview(){
+      var rows = state.responses.filter(inRange);
+      var complete = rows.filter(isComplete).length;
+      var issued = state.vouchers.length;
+      var redeemed = state.vouchers.filter(function(v){ return v.status === 'redeemed'; }).length;
+
+      $('kpiTotal').textContent = num(rows.length);
+      $('kpiTotalSub').textContent = state.range === 'today' ? 'Today'
+        : state.range === 'week' ? 'Last 7 days' : 'All time';
+      $('kpiCompletion').textContent = pct(complete, rows.length) + '%';
+      $('kpiCompletionSub').textContent = num(complete) + ' complete';
+      $('kpiIssued').textContent = num(issued);
+      $('kpiIssuedSub').textContent = num(state.vouchers.filter(function(v){ return v.status === 'unclaimed'; }).length) + ' unclaimed';
+      $('kpiRedeemed').textContent = num(redeemed);
+      $('kpiRedeemedSub').textContent = pct(redeemed, issued) + '% of issued';
+
+      renderChart(rows);
+      renderPriority(rows);
+      renderActivity(rows);
+    }
+
+    function startOfDay(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+    function hourLabel(h){
+      var suffix = h < 12 ? 'a' : 'p';
+      var hr = h % 12 === 0 ? 12 : h % 12;
+      return hr + suffix;
+    }
+
+    function buildBuckets(){
+      var now = new Date();
+      var buckets = [];
+      if(state.range === 'today'){
+        for(var h = 0; h < 24; h += 2){
+          buckets.push({
+            label: hourLabel(h),
+            from: new Date(now.getFullYear(), now.getMonth(), now.getDate(), h),
+            to: new Date(now.getFullYear(), now.getMonth(), now.getDate(), h + 2),
+            count: 0
+          });
+        }
+        return buckets;
+      }
+
+      var days = state.range === 'week' ? 7 : 7;
+      if(state.range === 'all'){
+        var stamps = state.responses
+          .map(function(r){ return new Date(r.created_at || r.submitted_at).getTime(); })
+          .filter(function(t){ return !isNaN(t); });
+        if(stamps.length){
+          var span = Math.round((Math.max.apply(null, stamps) - Math.min.apply(null, stamps)) / 86400000) + 1;
+          days = Math.min(14, Math.max(7, span));
+        }
+      }
+      for(var i = days - 1; i >= 0; i--){
+        var d = startOfDay(new Date(now.getTime() - i * 86400000));
+        var end = new Date(d.getTime() + 86400000);
+        buckets.push({
+          label: d.toLocaleDateString('en-IN', { weekday:'short' }),
+          from: d,
+          to: end,
+          count: 0
+        });
+      }
+      return buckets;
+    }
+
+    function renderChart(rows){
+      var buckets = buildBuckets();
+      rows.forEach(function(r){
+        var t = new Date(r.created_at || r.submitted_at);
+        if(isNaN(t.getTime())) return;
+        for(var i = 0; i < buckets.length; i++){
+          if(t >= buckets[i].from && t < buckets[i].to){ buckets[i].count++; break; }
+        }
+      });
+
+      var max = buckets.reduce(function(m, b){ return Math.max(m, b.count); }, 0);
+      var chartHtml = '';
+      var xHtml = '';
+      buckets.forEach(function(b){
+        var h = max > 0 ? Math.max(4, Math.round((b.count / max) * 100)) : 4;
+        chartHtml += '<div class="col"><div class="bar' + (b.count ? '' : ' empty') +
+                     '" style="height:' + (max > 0 && b.count ? h : 4) + '%"></div></div>';
+        xHtml += '<span>' + esc(b.label) + '</span>';
+      });
+      $('chart').innerHTML = chartHtml;
+      $('chartX').innerHTML = xHtml;
+
+      var peak = buckets.reduce(function(a, b){ return b.count > a.count ? b : a; }, { count:0 });
+      if(peak.count > 0){
+        $('peakLabel').textContent = peak.label;
+        $('peakSub').textContent = '(' + peak.count + ' ' + (peak.count === 1 ? 'entry' : 'entries') + ')';
+      }else{
+        $('peakLabel').textContent = 'No traffic yet';
+        $('peakSub').textContent = '';
+      }
+    }
+
+    function renderPriority(rows){
+      var q = QUESTIONS[0];
+      var dist = distribution(rows, q);
+      $('prioritySub').textContent = 'Direct feedback rank from ' + num(dist.answered) + ' answered';
+
+      var html = '';
+      if(!dist.answered){
+        html = '<div class="empty-note"><span class="material-symbols-outlined">bar_chart</span>' +
+               '<p>No answers in this range yet.</p></div>';
+      }else{
+        dist.list.forEach(function(item){
+          var p = pct(item.count, dist.answered);
+          html += '<div class="bar-item">' +
+                    '<div class="bi-top"><span class="bi-name">' + esc(item.name) + '</span>' +
+                    '<span class="bi-pct">' + p + '%</span></div>' +
+                    '<div class="track"><div class="fill" style="width:' + p + '%"></div></div>' +
+                    '<div class="bi-note">' + num(item.count) + ' of ' + num(dist.answered) + ' responses</div>' +
+                  '</div>';
+        });
+      }
+      $('priorityList').innerHTML = html;
+    }
+
+    function renderActivity(rows){
+      var recent = rows.slice(0, 5);
+      if(!recent.length){
+        $('activityList').innerHTML =
+          '<div class="empty-note"><span class="material-symbols-outlined">sensors_off</span>' +
+          '<p>No telemetry in this range. Responses will appear here as they arrive.</p></div>';
         return;
       }
-      var pass = document.getElementById('loginPass').value;
-      if (pass === ADMIN_HASH) {
-        resetAttempts();
-        sessionStorage.setItem('cuppilo_admin_auth', '1');
-        document.getElementById('loginGate').style.display = 'none';
-        document.getElementById('dashboardWrap').style.display = 'block';
-        loadBuilder();
-      } else {
-        incrementAttempts();
-        document.getElementById('loginErr').textContent = 'Incorrect password.';
-        document.getElementById('loginErr').style.display = 'block';
-        document.getElementById('loginPass').value = '';
-        document.getElementById('loginPass').focus();
-      }
-    }
-
-    /* Check if already logged in this session */
-    (function(){
-      if (sessionStorage.getItem('cuppilo_admin_auth') === '1') {
-        document.getElementById('loginGate').style.display = 'none';
-        document.getElementById('dashboardWrap').style.display = 'block';
-      }
-    })();
-
-    /* ══════════════════════════════════════ */
-    /* TABS                                   */
-    /* ══════════════════════════════════════ */
-    function switchTab(id, btn) {
-      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
-      document.querySelectorAll('.admin-tab').forEach(function(b){ b.classList.remove('active'); });
-      document.getElementById('tab-' + id).classList.add('active');
-      btn.classList.add('active');
-    }
-
-    /* ══════════════════════════════════════ */
-    /* RESPONSES                              */
-    /* ══════════════════════════════════════ */
-    function fetchAll() {
-      var SUPABASE_URL = 'https://ydugwvdotepndwdmqmxo.supabase.co';
-      var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkdWd3dmRvdGVwbmR3ZG1xbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MDIwODEsImV4cCI6MjEwNTM3ODA4MX0.R_gNOA4TNeKhaOOQ9Wl6P0fjwVO3gp2L6-SH29aC-TM';
-
-      fetch(SUPABASE_URL + '/rest/v1/campaign_responses?order=created_at.desc', {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY
-        }
-      }).then(function(r){ return r.json(); }).then(function(rows){
-        if (Array.isArray(rows)) { renderData(rows); }
-        else { document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">No data returned.</td></tr>'; }
-      }).catch(function(err){ document.getElementById('tableBody').innerHTML = '<tr><td colspan="11" class="empty-msg">Fetch failed: ' + err.message + '</td></tr>'; });
-    }
-
-    function renderData(rows) {
-      document.getElementById('statTotal').textContent = rows.length;
-      document.getElementById('statCafe').textContent  = mostCommon(rows.map(function(r){return r.cafe_type||''}).filter(Boolean)) || '—';
-      document.getElementById('statAtmos').textContent = mostCommon(rows.map(function(r){return r.atmosphere||''}).filter(Boolean)) || '—';
-      document.getElementById('statPrice').textContent = mostCommon(rows.map(function(r){return r.price_range||''}).filter(Boolean)) || '—';
       var html = '';
-      rows.forEach(function(r,i){
-        var time = r.created_at ? new Date(r.created_at).toLocaleDateString('en-IN') : '';
-        html += '<tr><td>'+(i+1)+'</td>';
-        html += '<td>'+esc(time)+'</td>';
-        html += '<td>'+esc(r.name)+'</td>';
-        html += '<td>'+esc(r.frequency)+'</td>';
-        html += '<td>'+esc(r.cafe_type)+'</td>';
-        html += '<td>'+esc(r.atmosphere)+'</td>';
-        html += '<td>'+esc(r.drinks)+'</td>';
-        html += '<td>'+esc(r.food)+'</td>';
-        html += '<td>'+esc(r.price_range)+'</td>';
-        html += '<td>'+esc(r.ideas)+'</td>';
-        html += '<td>'+esc(r.contact)+'</td>';
-        html += '</tr>';
+      recent.forEach(function(r){
+        var isFresh = r.status === 'confirmed';
+        html += '<div class="activity-item">' +
+                  '<div class="act-icon"><span class="material-symbols-outlined">' +
+                    (isFresh ? 'check_circle' : 'hourglass_top') + '</span></div>' +
+                  '<div class="act-body">' +
+                    '<div class="act-title">' + esc(r.name || 'Anonymous') + '</div>' +
+                    '<div class="act-meta">' + esc(r.cafe_type || 'No cafe type') +
+                      ' · ' + esc(r.atmosphere || 'No vibe') + '</div>' +
+                  '</div>' +
+                  '<span class="act-tag ' + (isFresh ? 'done' : 'sent') + '">' +
+                    (isFresh ? 'Complete' : 'Pending') + '</span>' +
+                  '<span class="act-time">' + esc(timeAgo(r.created_at)) + '</span>' +
+                '</div>';
       });
-      document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="11" class="empty-msg">No responses yet.</td></tr>';
+      $('activityList').innerHTML = html;
     }
 
-    function mostCommon(a){var c={},b=null,n=0;a.forEach(function(v){c[v]=(c[v]||0)+1});Object.keys(c).forEach(function(k){if(c[k]>n){n=c[k];b=k}});return b}
-    function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML}
-
-    /* ══════════════════════════════════════ */
-    /* FORM BUILDER                           */
-    /* ══════════════════════════════════════ */
-    var STORAGE_KEY = 'cuppilo_form_config';
-
-    var defaultConfig = {
-      drinks: ['Coffee', 'Tea', 'Shakes', 'Juices', 'Smoothies', 'Cold Drinks'],
-      food: ['Pazham Pori', 'Unniyappam', 'Puffs', 'Sandwiches', 'Fries', 'Desserts'],
-      cafeTypes: ['Specialty Coffee', 'Traditional Kerala', 'Modern Fusion'],
-      atmospheres: ['Quiet & Work-Friendly', 'Social & Lively', 'Cozy & Intimate', 'Open Air & Veranda'],
-      prices: ['Rs.40-80', 'Rs.80-120', 'Rs.120-160', 'Rs.160+']
-    };
-
-    var builderMap = {
-      drinks:       { container: 'builderDrinks',      input: 'newDrink' },
-      food:         { container: 'builderFood',         input: 'newFood' },
-      cafeTypes:    { container: 'builderCafeTypes',    input: 'newCafeType' },
-      atmospheres:  { container: 'builderAtmospheres',  input: 'newAtmosphere' },
-      prices:       { container: 'builderPrices',       input: 'newPrice' }
-    };
-
-    function getConfig() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultConfig)); }
-      catch(e) { return JSON.parse(JSON.stringify(defaultConfig)); }
-    }
-
-    function saveConfig(cfg) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
-    }
-
-    function loadBuilder() {
-      var cfg = getConfig();
-      Object.keys(builderMap).forEach(function(key){
-        renderBuilderItems(key, cfg[key] || []);
-      });
-    }
-
-    function renderBuilderItems(key, items) {
-      var el = document.getElementById(builderMap[key].container);
-      el.innerHTML = '';
-      items.forEach(function(item, i){
-        var tag = document.createElement('span');
-        tag.className = 'builder-item';
-        tag.innerHTML = esc(item) + ' <button class="remove-btn" onclick="removeItem(\'' + key + '\',' + i + ')" title="Remove">&times;</button>';
-        el.appendChild(tag);
-      });
-    }
-
-    function addItem(key) {
-      var input = document.getElementById(builderMap[key].input);
-      var val = input.value.trim();
-      if (!val) return;
-      var cfg = getConfig();
-      if (!cfg[key]) cfg[key] = [];
-      if (cfg[key].indexOf(val) === -1) {
-        cfg[key].push(val);
-        saveConfig(cfg);
-        renderBuilderItems(key, cfg[key]);
+    /* ───────── render: surveys ───────── */
+    function filteredResponses(){
+      var rows = state.responses;
+      if(state.filter === 'complete') rows = rows.filter(isComplete);
+      if(state.filter === 'incomplete') rows = rows.filter(function(r){ return !isComplete(r); });
+      if(state.filter === 'contact') rows = rows.filter(function(r){ return !!(r.contact || '').trim(); });
+      var q = state.search.trim().toLowerCase();
+      if(q){
+        rows = rows.filter(function(r){
+          return [r.name, r.contact, r.cafe_type, r.atmosphere, r.food, r.ideas, r.price_range]
+            .some(function(v){ return (v || '').toLowerCase().indexOf(q) !== -1; });
+        });
       }
-      input.value = '';
-      input.focus();
+      return rows;
     }
 
-    function removeItem(key, index) {
-      var cfg = getConfig();
-      cfg[key].splice(index, 1);
-      saveConfig(cfg);
-      renderBuilderItems(key, cfg[key]);
+    function renderSurveys(){
+      var all = state.responses;
+      var complete = all.filter(isComplete).length;
+      $('svTotal').textContent = num(all.length);
+      $('svCompletion').textContent = pct(complete, all.length) + '%';
+      $('svCompletionSub').textContent = num(complete) + ' of ' + num(all.length) + ' fully answered';
+
+      $('cntAll').textContent = all.length;
+      $('cntComplete').textContent = complete;
+      $('cntIncomplete').textContent = all.length - complete;
+      $('cntContact').textContent = all.filter(function(r){ return !!(r.contact || '').trim(); }).length;
+      $('breakdownSub').textContent = QUESTIONS.length + ' modules';
+
+      renderBreakdown();
+      renderStream();
     }
 
-    function publishConfig() {
-      var cfg = getConfig();
-      saveConfig(cfg);
-      var status = document.getElementById('builderStatus');
-      status.style.display = 'block';
-      setTimeout(function(){ status.style.display = 'none'; }, 3000);
+    function renderBreakdown(){
+      var rows = state.responses;
+      var html = '';
+      QUESTIONS.forEach(function(q, idx){
+        var dist = distribution(rows, q);
+        var top = dist.list.filter(function(i){ return i.count > 0; })[0];
+        var max = dist.list.reduce(function(m, i){ return Math.max(m, i.count); }, 0);
+
+        html += '<div class="accordion' + (idx === 0 ? ' open' : '') + '">' +
+                  '<button class="acc-head" type="button" data-acc="' + idx + '">' +
+                    '<span class="acc-num">' + String(idx + 1).padStart(2, '0') + '</span>' +
+                    '<span class="acc-titles"><h3>' + esc(q.label) + '</h3>' +
+                    '<p>' + num(dist.answered) + ' submissions total</p></span>' +
+                    '<span class="material-symbols-outlined acc-chev">expand_more</span>' +
+                  '</button>' +
+                  '<div class="acc-body"><div class="acc-rows">';
+
+        if(!dist.answered){
+          html += '<div class="empty-note"><span class="material-symbols-outlined">hourglass_empty</span>' +
+                  '<p>No answers recorded for this question yet.</p></div>';
+        }else{
+          dist.list.forEach(function(item){
+            var w = max > 0 ? Math.round((item.count / max) * 100) : 0;
+            html += '<div class="acc-row">' +
+                      '<div class="ar-top"><span class="ar-name">' + esc(item.name) + '</span>' +
+                      '<span class="ar-val">' + num(item.count) + ' (' + pct(item.count, dist.answered) + '%)</span></div>' +
+                      '<div class="track"><div class="fill" style="width:' + w + '%"></div></div>' +
+                    '</div>';
+          });
+        }
+
+        html += '</div><div class="acc-foot"><span>' + num(dist.answered) + ' answers</span>' +
+                (top ? '<span class="good"><span class="material-symbols-outlined">trophy</span>Top: ' +
+                       esc(top.name) + '</span>' : '') +
+                '</div></div></div>';
+      });
+      $('breakdownList').innerHTML = html;
     }
 
-    function resetConfig() {
-      if (!confirm('Reset all form items to defaults?')) return;
-      saveConfig(JSON.parse(JSON.stringify(defaultConfig)));
-      loadBuilder();
-      var status = document.getElementById('builderStatus');
-      status.textContent = 'Reset to defaults. Click Publish to apply.';
-      status.style.display = 'block';
-      setTimeout(function(){ status.style.display = 'none'; status.textContent = 'Published! The live form will now use your updated items.'; }, 3000);
+    function respId(r){
+      var base = String(r.id || '').replace(/[^a-fA-F0-9]/g, '').toUpperCase();
+      return '#CP-' + (base ? base.slice(0, 4) : '0000');
     }
+
+    function renderStream(){
+      var rows = filteredResponses();
+      if(!rows.length){
+        $('streamList').innerHTML =
+          '<div class="empty-note"><span class="material-symbols-outlined">search_off</span>' +
+          '<p>No responses match this filter.</p></div>';
+        return;
+      }
+      var html = '';
+      rows.forEach(function(r){
+        var tags = [
+          { icon:'local_cafe', text:r.cafe_type },
+          { icon:'park', text:r.atmosphere },
+          { icon:'payments', text:r.price_range }
+        ].filter(function(t){ return !!t.text; });
+
+        html += '<div class="stream-item" data-id="' + esc(r.id) + '">' +
+                  '<div class="si-top">' +
+                    '<span class="si-id">' + esc(respId(r)) + '</span>' +
+                    '<span class="si-when">' + esc(timeAgo(r.created_at)) + '</span>' +
+                  '</div>';
+
+        if(tags.length){
+          html += '<div class="si-tags">';
+          tags.forEach(function(t){
+            html += '<span class="si-tag"><span class="material-symbols-outlined">' + t.icon + '</span>' +
+                    esc(t.text) + '</span>';
+          });
+          html += '</div>';
+        }
+
+        html += '<div class="si-actions">' +
+                  '<button type="button" data-act="answers"><span class="material-symbols-outlined">visibility</span>View Full Answers</button>' +
+                  '<button type="button" data-act="copy"><span class="material-symbols-outlined">content_copy</span>Copy</button>' +
+                '</div>';
+
+        var pairs = [
+          ['Name', r.name],
+          ['Contact', r.contact],
+          ['Cafe identity', r.cafe_type],
+          ['Vibe', r.atmosphere],
+          ['Menu pick', r.food],
+          ['Tribe', r.ideas],
+          ['Pricing', r.price_range],
+          ['Frequency', r.frequency],
+          ['Drinks', r.drinks],
+          ['Status', r.status],
+          ['Submitted', shortDate(r.created_at)]
+        ];
+
+        html += '<div class="si-answers">';
+        pairs.forEach(function(p){
+          var empty = !p[1];
+          html += '<div class="ans-row"><span class="ar-k">' + esc(p[0]) + '</span>' +
+                  '<span class="ar-v' + (empty ? ' empty' : '') + '">' +
+                  esc(empty ? '—' : p[1]) + '</span></div>';
+        });
+        html += '</div></div>';
+      });
+      $('streamList').innerHTML = html;
+    }
+
+    /* ───────── render: vouchers ───────── */
+    function renderVouchers(){
+      var all = state.vouchers;
+      var redeemed = all.filter(function(v){ return v.status === 'redeemed'; });
+      var unclaimed = all.filter(function(v){ return v.status === 'unclaimed'; });
+
+      $('voTotal').textContent = num(all.length);
+      $('voRedeemed').textContent = num(redeemed.length);
+      $('voUnclaimed').textContent = num(unclaimed.length);
+      $('voRate').textContent = pct(redeemed.length, all.length) + '%';
+      $('voRateSub').textContent = pct(redeemed.length, all.length) >= 50 ? 'Strong conversion' : 'Room to grow';
+
+      var today = startOfDay(new Date());
+      var todayCount = redeemed.filter(function(v){
+        return v.redeemed_at && new Date(v.redeemed_at) >= today;
+      }).length;
+      $('todayCount').textContent = todayCount + ' redeemed today';
+
+      var html = '';
+      var feed = redeemed.slice(0, 8);
+      if(!feed.length){
+        html = '<div class="empty-note"><span class="material-symbols-outlined">storefront</span>' +
+               '<p>No redemptions yet. Verify a code at the counter to see it here.</p></div>';
+      }else{
+        feed.forEach(function(v){
+          html += '<div class="redeem-item">' +
+                    '<div class="ri-icon"><span class="material-symbols-outlined">local_cafe</span></div>' +
+                    '<div class="ri-body">' +
+                      '<div class="ri-code">' + esc(v.code) + '</div>' +
+                      '<div class="ri-sub">' + esc(v.reward || 'Perk') + ' · ' +
+                        esc(v.redeemed_by || 'Counter') + (v.counter ? ' · ' + esc(v.counter) : '') + '</div>' +
+                    '</div>' +
+                    '<span class="ri-when">' + esc(timeAgo(v.redeemed_at)) + '</span>' +
+                  '</div>';
+        });
+      }
+      $('redeemList').innerHTML = html;
+    }
+
+    function renderSettings(){
+      $('setTheme').textContent = (document.documentElement.getAttribute('data-theme') === 'dark')
+        ? 'Dark (Obsidian)' : 'Light (Crimson)';
+      if(state.session){
+        $('setEmail').textContent = state.session.email || '—';
+        $('setExpiry').textContent = state.session.expires_at
+          ? new Date(state.session.expires_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })
+          : '—';
+      }
+    }
+
+    function renderAll(){
+      renderOverview();
+      renderSurveys();
+      renderVouchers();
+      renderSettings();
+    }
+
+    /* ───────── screens ───────── */
+    function gotoScreen(name){
+      state.screen = name;
+      document.querySelectorAll('.console-screen').forEach(function(s){
+        s.classList.toggle('on', s.id === 'screen-' + name);
+      });
+      document.querySelectorAll('.tab').forEach(function(t){
+        t.classList.toggle('on', t.getAttribute('data-screen') === name);
+      });
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    /* ───────── voucher validation ───────── */
+    function setValidator(kind, text){
+      var box = $('vResult');
+      box.className = 'validator-result show ' + kind;
+      $('vResultIcon').textContent = kind === 'ok' ? 'check_circle' : 'error';
+      $('vResultText').textContent = text;
+    }
+
+    function redeem(code){
+      code = (code || '').trim().toUpperCase();
+      if(!code){
+        setValidator('bad', 'Enter a voucher code first.');
+        return;
+      }
+      if(!/^CUPPILO-[A-Z0-9]+-[0-9]{5}$/.test(code)){
+        setValidator('bad', 'That format is not valid. Expected CUPPILO-ROAST-00001.');
+        return;
+      }
+
+      $('verifyBtn').disabled = true;
+      $('verifyLabel').textContent = 'Checking…';
+
+      api('/rest/v1/vouchers?code=eq.' + encodeURIComponent(code) + '&select=*').then(function(rows){
+        if(!Array.isArray(rows) || !rows.length){
+          setValidator('bad', 'No voucher matches ' + code + '.');
+          return;
+        }
+        var v = rows[0];
+        if(v.status === 'redeemed'){
+          setValidator('bad', 'Already redeemed ' + timeAgo(v.redeemed_at) + ' by ' + (v.redeemed_by || 'counter') + '.');
+          return;
+        }
+        if(v.status === 'expired'){
+          setValidator('bad', 'This voucher has expired.');
+          return;
+        }
+
+        var patch = {
+          status: 'redeemed',
+          redeemed_at: new Date().toISOString(),
+          redeemed_by: state.session.email || 'admin',
+          counter: String((parseInt(v.counter, 10) || 0) + 1)
+        };
+
+        return api('/rest/v1/vouchers?id=eq.' + v.id, {
+          method: 'PATCH',
+          prefer: 'return=representation',
+          body: patch
+        }).then(function(updated){
+          var row = Array.isArray(updated) && updated[0] ? updated[0] : Object.assign({}, v, patch);
+          setValidator('ok', 'Code validated! ' + (row.reward || 'Perk') + ' redeemed.');
+          var idx = -1;
+          state.vouchers.forEach(function(x, i){ if(x.id === row.id) idx = i; });
+          if(idx >= 0) state.vouchers[idx] = row;
+          else state.vouchers.unshift(row);
+          renderVouchers();
+          renderOverview();
+          toast('Redemption recorded.');
+          $('voucherInput').value = '';
+        });
+      }).catch(function(err){
+        console.error(err);
+        setValidator('bad', 'Could not verify the code. Try again.');
+      }).then(function(){
+        $('verifyBtn').disabled = false;
+        $('verifyLabel').textContent = 'Verify & Redeem';
+      });
+    }
+
+    /* ───────── exports ───────── */
+    var RESPONSE_COLS = ['id','created_at','name','contact','status','cafe_type','atmosphere','food','ideas','price_range','frequency','drinks','submitted_at'];
+
+    function exportResponsesCsv(){
+      var rows = state.responses;
+      var lines = [RESPONSE_COLS.join(',')];
+      rows.forEach(function(r){
+        lines.push(RESPONSE_COLS.map(function(c){ return csvCell(r[c]); }).join(','));
+      });
+      download('cuppilo-responses.csv', lines.join('\n'));
+      toast('CSV exported (' + rows.length + ' rows).');
+    }
+
+    function exportResponsesJson(){
+      download('cuppilo-responses.json', JSON.stringify(state.responses, null, 2), 'application/json');
+      toast('JSON exported (' + state.responses.length + ' rows).');
+    }
+
+    function exportVouchersCsv(){
+      var cols = ['id','code','status','reward','counter','redeemed_by','redeemed_at','created_at','campaign_response_id','founder_id'];
+      var lines = [cols.join(',')];
+      state.vouchers.forEach(function(v){
+        lines.push(cols.map(function(c){ return csvCell(v[c]); }).join(','));
+      });
+      download('cuppilo-vouchers.csv', lines.join('\n'));
+      toast('Voucher log exported.');
+    }
+
+    function exportAudit(){
+      var cols = ['code','reward','redeemed_by','counter','redeemed_at'];
+      var lines = [cols.join(',')];
+      state.vouchers.filter(function(v){ return v.status === 'redeemed'; })
+        .forEach(function(v){ lines.push(cols.map(function(c){ return csvCell(v[c]); }).join(',')); });
+      download('cuppilo-redemptions-audit.csv', lines.join('\n'));
+      toast('Audit log downloaded.');
+    }
+
+    /* ───────── rules ───────── */
+    function loadRules(){
+      var defaults = { autoGenerate:true, counterToast:true, throttle:false };
+      var saved = {};
+      try{ saved = JSON.parse(localStorage.getItem(RULES_KEY) || '{}'); }catch(e){}
+      var rules = Object.assign({}, defaults, saved);
+      document.querySelectorAll('.switch[data-rule]').forEach(function(sw){
+        var key = sw.getAttribute('data-rule');
+        sw.setAttribute('aria-checked', rules[key] ? 'true' : 'false');
+      });
+      return rules;
+    }
+
+    function toggleRule(sw){
+      var rules = loadRules();
+      var key = sw.getAttribute('data-rule');
+      var next = sw.getAttribute('aria-checked') !== 'true';
+      rules[key] = next;
+      sw.setAttribute('aria-checked', next ? 'true' : 'false');
+      try{ localStorage.setItem(RULES_KEY, JSON.stringify(rules)); }catch(e){}
+      toast((next ? 'Enabled' : 'Disabled') + ' — ' + sw.getAttribute('aria-label') + '.');
+    }
+
+    /* ───────── events ───────── */
+    $('authForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var locked = lockUntil();
+      if(locked && Date.now() < locked){
+        var wait = Math.ceil((locked - Date.now()) / 1000);
+        showAuthError('Too many failed attempts. Try again in ' + wait + 's.');
+        return;
+      }
+      if(locked && Date.now() >= locked) resetAttempts();
+      var email = $('authEmail').value.trim();
+      var password = $('authPassword').value;
+      if(!email || !password){
+        showAuthError('Enter your email and password.');
+        return;
+      }
+      login(email, password);
+    });
+
+    $('logoutBtn').addEventListener('click', function(){ logout('Signed out.'); });
+    $('signOutBtn').addEventListener('click', function(){ logout('Signed out.'); });
+
+    $('refreshBtn').addEventListener('click', function(){ loadAll(true); });
+
+    $('themeToggle').addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme');
+      setTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    document.querySelectorAll('.tab').forEach(function(t){
+      t.addEventListener('click', function(){ gotoScreen(t.getAttribute('data-screen')); });
+    });
+    document.querySelectorAll('[data-goto]').forEach(function(b){
+      b.addEventListener('click', function(){ gotoScreen(b.getAttribute('data-goto')); });
+    });
+
+    $('rangeRow').addEventListener('click', function(e){
+      var chip = e.target.closest('.chip');
+      if(!chip) return;
+      state.range = chip.getAttribute('data-range');
+      $('rangeRow').querySelectorAll('.chip').forEach(function(c){
+        c.classList.toggle('on', c === chip);
+      });
+      renderOverview();
+    });
+
+    $('respFilters').addEventListener('click', function(e){
+      var chip = e.target.closest('.chip');
+      if(!chip) return;
+      state.filter = chip.getAttribute('data-filter');
+      $('respFilters').querySelectorAll('.chip').forEach(function(c){
+        c.classList.toggle('on', c === chip);
+      });
+      renderStream();
+    });
+
+    $('respSearch').addEventListener('input', function(e){
+      state.search = e.target.value;
+      renderStream();
+    });
+
+    $('breakdownList').addEventListener('click', function(e){
+      var head = e.target.closest('.acc-head');
+      if(!head) return;
+      head.parentElement.classList.toggle('open');
+    });
+
+    $('streamList').addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-act]');
+      if(!btn) return;
+      var item = btn.closest('.stream-item');
+      var id = item.getAttribute('data-id');
+      var row = state.responses.filter(function(r){ return String(r.id) === id; })[0];
+      if(!row) return;
+
+      if(btn.getAttribute('data-act') === 'answers'){
+        item.classList.toggle('open');
+        var open = item.classList.contains('open');
+        btn.innerHTML = '<span class="material-symbols-outlined">' + (open ? 'visibility_off' : 'visibility') +
+                        '</span>' + (open ? 'Hide Answers' : 'View Full Answers');
+        return;
+      }
+
+      var text = [
+        respId(row) + ' · ' + shortDate(row.created_at),
+        'Name: ' + (row.name || '—'),
+        'Contact: ' + (row.contact || '—'),
+        'Cafe identity: ' + (row.cafe_type || '—'),
+        'Vibe: ' + (row.atmosphere || '—'),
+        'Menu: ' + (row.food || '—'),
+        'Tribe: ' + (row.ideas || '—'),
+        'Pricing: ' + (row.price_range || '—')
+      ].join('\n');
+
+      var done = function(){ toast('Response copied.'); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(function(){ toast('Copy failed.', false); });
+      }else{ toast('Clipboard not available.', false); }
+    });
+
+    $('verifyBtn').addEventListener('click', function(){ redeem($('voucherInput').value); });
+    $('voucherInput').addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ e.preventDefault(); redeem(e.target.value); }
+    });
+
+    document.querySelectorAll('.switch[data-rule]').forEach(function(sw){
+      sw.addEventListener('click', function(){ toggleRule(sw); });
+    });
+
+    $('exportCsv').addEventListener('click', exportResponsesCsv);
+    $('setCsv').addEventListener('click', exportResponsesCsv);
+    $('exportJson').addEventListener('click', exportResponsesJson);
+    $('setJson').addEventListener('click', exportResponsesJson);
+    $('setVoucherCsv').addEventListener('click', exportVouchersCsv);
+    $('exportAudit').addEventListener('click', exportAudit);
+
+    $('resetPrefs').addEventListener('click', function(){
+      try{
+        localStorage.removeItem(RULES_KEY);
+        localStorage.removeItem('cuppilo-admin-theme');
+      }catch(e){}
+      loadRules();
+      setTheme('dark');
+      toast('Local preferences reset.');
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') hideAuthError();
+    });
+
+    /* ───────── boot ───────── */
+    loadRules();
+    state.session = loadSession();
+    if(state.session){
+      enterConsole();
+    }else{
+      $('authScreen').style.display = 'flex';
+      $('console').classList.remove('on');
+    }
+
+    setInterval(function(){
+      if(!state.session || !state.session.refresh_token) return;
+      if(Date.now() > (state.session.expires_at || 0) - 120000){
+        refreshSession().catch(function(){ logout('Your session expired. Please sign in again.'); });
+      }
+    }, 60000);
+  })();
   </script>
 
 </body>

@@ -3,74 +3,208 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YOU'RE PART OF THE BREW — CUPPILO</title>
+  <title>Thank You — CUPPILO</title>
   <meta name="robots" content="noindex, nofollow"/>
-  <meta name="theme-color" content="#872419"/>
-  <link rel="icon" type="image/svg+xml" href="img/logo-icon.png"/>
+  <meta name="theme-color" content="#D32F2F"/>
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <script>
+    (function(){
+      try{
+        var t = localStorage.getItem('cuppilo-theme');
+        if(!t){ t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+        document.documentElement.setAttribute('data-theme', t);
+      }catch(e){ document.documentElement.setAttribute('data-theme','light'); }
+    })();
+  </script>
   <link rel="stylesheet" href="css/styles.css"/>
-  <style>
-    .founder-number{font-size:1.25rem;font-weight:700;color:var(--primary);margin:1rem 0;letter-spacing:1px}
-</style>
-  <style>
-    .thankyou{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:5rem 1.25rem 3rem;background:linear-gradient(180deg,#fff8f5 0%,#f4ece8 100%)}
-    .thankyou-inner{max-width:480px;width:100%}
-    .thankyou-icon{margin-bottom:1rem;color:var(--primary)}
-    .thankyou h1{font-size:2rem;font-weight:800;color:var(--charcoal);margin-bottom:1rem;letter-spacing:-.02em}
-    .thankyou h1 .accent{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;color:var(--primary)}
-    .thankyou-quote{font-size:1rem;color:var(--on-sv);line-height:1.7;margin-bottom:1.5rem;font-weight:500}
-    .thankyou-flow{display:flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:600;color:var(--primary);margin-bottom:2rem;flex-wrap:wrap}
-    .thankyou-flow span{white-space:nowrap}
-    .thankyou-hook{font-size:1.125rem;font-weight:600;color:var(--charcoal);font-style:italic;line-height:1.6;margin-bottom:2.5rem;padding:0 1rem;font-family:'Playfair Display',serif}
-    .thankyou-actions{display:flex;flex-direction:column;gap:.75rem;align-items:center}
-    .thankyou-actions a{width:100%;max-width:280px}
-    .back-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.875rem 1.75rem;border-radius:9999px;border:2px solid var(--primary);color:var(--primary);font-weight:700;font-size:1rem;text-decoration:none;transition:all .2s;min-height:56px;font-family:inherit}
-    .back-btn:hover{background:var(--primary);color:var(--on-p);transform:translateY(-1px)}
-  </style>
 </head>
 <body>
 
-  <!-- TOP BAR — Logo top left -->
-  <header class="topbar">
-    <img src="img/logo-icon.png" alt="CUPPILO" class="topbar-logo"/>
-  </header>
+  <div class="wrap">
 
-  <main>
-    <section class="thankyou">
-      <div class="thankyou-inner">
-        <span class="material-symbols-outlined thankyou-icon" style="font-size:4rem">local_cafe</span>
-        <h1>YOU'RE PART OF <span class="accent">THE BREW.</span></h1>
-        <p class="thankyou-quote">Thank you for helping shape Cuppilo.</p>
-        <div class="founder-number" id="founder-number">Founder #000001</div>
-        <div class="thankyou-flow">
-          <span>Your idea</span>
-          <span>→</span>
-          <span>Our research</span>
-          <span>→</span>
-          <span>Tomorrow's café</span>
+    <header class="topnav">
+      <div class="topnav-inner">
+        <a class="topnav-logo" href="index.html" aria-label="Cuppilo home">
+          <img src="img/logo-icon.png" alt="CUPPILO"/>
+        </a>
+        <nav class="topnav-links" aria-label="Primary">
+          <a href="index.html#how">How it works</a>
+          <a href="scratch.html">Your rewards</a>
+        </nav>
+        <div class="topnav-actions">
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle colour theme">
+            <span class="t-sun"><span class="material-symbols-outlined">light_mode</span></span>
+            <span class="t-moon"><span class="material-symbols-outlined">dark_mode</span></span>
+          </button>
         </div>
-        <p class="thankyou-hook">Maybe one day, you'll walk into Cuppilo and see something you suggested.</p>
-        <script>
-        // Extract founder number from URL query param
-        var urlParams = new URLSearchParams(window.location.search);
-        var founderParam = urlParams.get('founder');
-        var founderEl = document.getElementById('founder-number');
-        if (founderParam && founderEl) {
-          founderEl.textContent = 'Founder ' + founderParam;
-        }
-        </script>
-        <div class="thankyou-actions">
-          <a href="https://www.instagram.com/cuppilo.campaign" class="footer-insta" target="_blank" rel="noopener">
+      </div>
+    </header>
+
+    <main style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- THANK YOU -->
+      <section class="card reward-hero">
+        <div class="reward-icon"><span class="material-symbols-outlined">local_cafe</span></div>
+        <h1>Thank You for Your Feedback!</h1>
+        <p>Your answers are already shaping the menu, the music and the seating plan. Here is your founder pass.</p>
+        <div class="founder-pill" id="founderPill">
+          <span class="material-symbols-outlined">workspace_premium</span>
+          <span id="founderNumber">Founder #000001</span>
+        </div>
+      </section>
+
+      <!-- VOUCHER -->
+      <section class="voucher-card">
+        <div class="voucher-top">
+          <div>
+            <div class="vt-label">Complimentary Perk</div>
+            <div class="vt-value">Soft Opening Reward</div>
+          </div>
+          <span class="material-symbols-outlined">redeem</span>
+        </div>
+        <div class="voucher-dash"></div>
+        <div class="voucher-body">
+          <div class="voucher-code-row">
+            <span class="voucher-code" id="voucherCode">CUPPILO-ROAST-2026</span>
+            <button class="copy-btn" id="copyCode" type="button">
+              <span class="material-symbols-outlined">content_copy</span>
+              <span>Copy</span>
+            </button>
+          </div>
+          <p class="voucher-desc">
+            Enjoy 1 Free Specialty Pour-Over or Nitro Cold Brew on your next visit.
+            Show this code at the counter.
+          </p>
+          <div class="voucher-meta">
+            <span>Valid at Main Street Flagship</span>
+            <span>Expires 31 Dec 2026</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECOND PERK -->
+      <section class="card">
+        <div class="section-head">
+          <h2>You have a second perk waiting</h2>
+          <p>Scratch your founding card to unlock a limited Founders Pass reward.</p>
+        </div>
+        <a class="btn btn-primary btn-block" href="scratch.html">
+          <span class="material-symbols-outlined">gesture</span>
+          Open Scratch Card
+        </a>
+      </section>
+
+      <!-- COMMUNITY -->
+      <section class="card">
+        <div class="section-head">
+          <h2>Join the Cuppilo Club</h2>
+          <p>Stay updated on seasonal bean drops, cupping sessions, and secret cafe perks.</p>
+        </div>
+        <form class="newsletter" id="newsletterForm" style="padding-top:0;margin-bottom:16px;">
+          <input type="email" id="newsletterEmail" placeholder="Enter email address" aria-label="Email address"/>
+          <button type="submit">Subscribe</button>
+        </form>
+        <div class="footer-social" style="padding-top:0;flex-direction:column;">
+          <a class="social-pill social-ig" style="width:100%;justify-content:center;" href="https://www.instagram.com/cuppilo.campaign" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
             Follow on Instagram
           </a>
-          <a href="index.html" class="back-btn">
-            <span class="material-symbols-outlined" style="font-size:18px">arrow_back</span>
-            Back to Cuppilo
-          </a>
+          <button class="social-pill social-tg" style="width:100%;justify-content:center;" type="button" id="telegramBtn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.91 3.79L20.3 20.84c-.25 1.21-.98 1.5-2 .94l-5.5-4.07-2.66 2.57c-.3.3-.55.56-1.1.56-.72 0-.6-.27-.84-.95L6.3 13.7l-5.45-1.7c-1.18-.35-1.19-1.16.26-1.75l21.26-8.2c.97-.43 1.9.24 1.53 1.73z"/></svg>
+            Join Telegram Community
+          </button>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
+
+      <!-- BACK -->
+      <a class="btn btn-secondary btn-block" href="index.html">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back to Home Page
+      </a>
+
+      <p class="copyright">&copy; 2026 Cuppilo Cafe. All rights reserved.</p>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="material-symbols-outlined" id="toastIcon">check_circle</span>
+    <span id="toastText">Saved</span>
+  </div>
+
+  <script>
+  (function(){
+    'use strict';
+    var params = new URLSearchParams(window.location.search);
+
+    var founder = params.get('founder');
+    if(founder){
+      document.getElementById('founderNumber').textContent = 'Founder ' + founder;
+    }
+
+    var voucher = params.get('voucher');
+    if(voucher){
+      document.getElementById('voucherCode').textContent = voucher;
+    }
+
+    function setTheme(t){
+      document.documentElement.setAttribute('data-theme', t);
+      try{ localStorage.setItem('cuppilo-theme', t); }catch(e){}
+    }
+    document.getElementById('themeToggle').addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme');
+      setTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    var toastTimer;
+    function toast(msg, ok){
+      var el = document.getElementById('toast');
+      document.getElementById('toastText').textContent = msg;
+      document.getElementById('toastIcon').textContent = ok === false ? 'error' : 'check_circle';
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2800);
+    }
+
+    document.getElementById('copyCode').addEventListener('click', function(){
+      var code = document.getElementById('voucherCode').textContent.trim();
+      var done = function(){ toast('Voucher code copied.'); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(code).then(done).catch(function(){ fallback(); });
+      }else{ fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = code;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try{ document.execCommand('copy'); done(); }
+        catch(e){ toast('Copy failed — please copy manually.', false); }
+        document.body.removeChild(ta);
+      }
+    });
+
+    document.getElementById('telegramBtn').addEventListener('click', function(){
+      toast('Telegram community opens at launch — join us on Instagram meanwhile.', false);
+    });
+
+    document.getElementById('newsletterForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var input = document.getElementById('newsletterEmail');
+      var val = input.value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
+        toast('Please enter a valid email address.', false);
+        input.focus();
+        return;
+      }
+      input.value = '';
+      toast('You are on the launch list. Thank you!');
+    });
+  })();
+  </script>
 
 </body>
 </html>

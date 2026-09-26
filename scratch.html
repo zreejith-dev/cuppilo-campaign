@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Founding Perk — Scratch Card — CUPPILO</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="theme-color" content="#D32F2F"/>
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <script>
+    (function(){
+      try{
+        var t = localStorage.getItem('cuppilo-theme');
+        if(!t){ t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+        document.documentElement.setAttribute('data-theme', t);
+      }catch(e){ document.documentElement.setAttribute('data-theme','light'); }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <header class="topnav">
+      <div class="topnav-inner">
+        <a class="topnav-logo" href="index.html" aria-label="Cuppilo home">
+          <img src="img/logo-icon.png" alt="CUPPILO"/>
+        </a>
+        <nav class="topnav-links" aria-label="Primary">
+          <a href="index.html">Campaign hub</a>
+          <a href="thank-you.html">My voucher</a>
+        </nav>
+        <div class="topnav-actions">
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle colour theme">
+            <span class="t-sun"><span class="material-symbols-outlined">light_mode</span></span>
+            <span class="t-moon"><span class="material-symbols-outlined">dark_mode</span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- CAMPAIGN MILESTONE BANNER -->
+      <section class="scratch-banner">
+        <div class="sb-icon"><span class="material-symbols-outlined">coffee</span></div>
+        <div>
+          <div class="sb-label">Soft Opening · T-365</div>
+          <div class="sb-value">Community Flavor Lab</div>
+        </div>
+        <div class="sb-count">
+          <span id="daysLeft">365</span>
+          <small>DAYS LEFT</small>
+        </div>
+      </section>
+
+      <p style="font-size:13.5px;line-height:1.6;color:var(--text-2);margin:-4px 2px 0;">
+        Phase 1: Your feedback defines our roast profiles and late-night lounge blueprint before launch.
+      </p>
+
+      <!-- SCRATCH CARD HERO -->
+      <section class="card scratch-stage">
+        <div class="scratch-kicker">Exclusive Founding Perk</div>
+        <h2>Scratch to unlock your Founders Pass</h2>
+
+        <div class="scratch-reveal">
+          <div class="sr-label">Founder Pass Unlocked</div>
+          <div class="sr-name">Tasting Flight &amp; Single-Origin Chemex</div>
+          <div class="sr-value">₹0 entry · 3 mini pours plus a signature warm croissant on the house.</div>
+          <div class="sr-code" id="revealCode">
+            <span class="material-symbols-outlined" style="font-size:16px">confirmation_number</span>
+            <span id="passCode">CUPPILO-365</span>
+          </div>
+
+          <div class="scratch-canvas-wrap" id="canvasWrap">
+            <canvas id="scratchCanvas"></canvas>
+            <div class="scratch-hint" id="scratchHint">
+              <span class="material-symbols-outlined">gesture</span>
+              <span>Rub here to scratch &amp; reveal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scratch-progress">
+          <span id="pctLabel">0% revealed</span>
+          <span class="track"><span class="fill" id="pctFill"></span></span>
+          <button class="btn-ghost" id="quickReveal" type="button" style="padding:4px 8px;font-size:12px;font-weight:700;color:var(--primary)">Quick reveal</button>
+        </div>
+
+        <div class="scratch-actions">
+          <div class="row">
+            <button class="btn btn-primary" id="savePass" type="button">
+              <span class="material-symbols-outlined">account_balance_wallet</span>
+              Save Pass
+            </button>
+            <button class="btn btn-secondary" id="sharePass" type="button">
+              <span class="material-symbols-outlined">share</span>
+              Share
+            </button>
+          </div>
+          <a class="btn btn-ghost btn-block" href="index.html">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Return to Campaign Hub
+          </a>
+        </div>
+      </section>
+
+      <!-- COMMUNITY PULSE -->
+      <section class="stat-row">
+        <div class="stat-card">
+          <div class="sc-label">Neighbours heard</div>
+          <div class="sc-value" id="founderTotal">1,429</div>
+          <div class="sc-hint">Founders on the wall</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Late-night requests</div>
+          <div class="sc-value accent">74%</div>
+          <div class="sc-hint">Asked for pour-over flights</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Community Co-Creation</h2>
+          <p>
+            <strong style="color:var(--primary)">74% of survey participants</strong> requested dedicated
+            late-night pour-over tasting flights alongside silent study cubicles.
+          </p>
+        </div>
+      </section>
+
+      <!-- ROADMAP -->
+      <section class="roadmap">
+        <div class="rm-top">
+          <span class="rm-title">Roadmap: unlocking Phase 2 tasting menu</span>
+          <span class="rm-pct">38%</span>
+        </div>
+        <div class="track"><div class="fill" style="width:38%"></div></div>
+        <div class="rm-note">38% toward the founding goal of 500 verified responses.</div>
+      </section>
+
+      <p class="copyright">&copy; 2026 Cuppilo Cafe. All rights reserved.</p>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="material-symbols-outlined" id="toastIcon">check_circle</span>
+    <span id="toastText">Saved</span>
+  </div>
+
+  <script>
+  (function(){
+    'use strict';
+
+    var SUPABASE_URL = 'https://ydugwvdotepndwdmqmxo.supabase.co';
+    var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkdWd3dmRvdGVwbmR3ZG1xbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MDIwODEsImV4cCI6MjEwNTM3ODA4MX0.R_gNOA4TNeKhaOOQ9Wl6P0fjwVO3gp2L6-SH29aC-TM';
+
+    var params = new URLSearchParams(window.location.search);
+    var code = params.get('voucher') || 'CUPPILO-365';
+    document.getElementById('passCode').textContent = code;
+
+    var launch = new Date('2027-01-01T09:00:00+05:30');
+    var days = Math.max(0, Math.ceil((launch - Date.now()) / 86400000));
+    document.getElementById('daysLeft').textContent = days;
+
+    var toastTimer;
+    function toast(msg, ok){
+      var el = document.getElementById('toast');
+      document.getElementById('toastText').textContent = msg;
+      document.getElementById('toastIcon').textContent = ok === false ? 'error' : 'check_circle';
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2800);
+    }
+
+    function setTheme(t){
+      document.documentElement.setAttribute('data-theme', t);
+      try{ localStorage.setItem('cuppilo-theme', t); }catch(e){}
+    }
+    document.getElementById('themeToggle').addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme');
+      setTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    function copyText(text){
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise(function(resolve, reject){
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try{ document.execCommand('copy'); resolve(); }
+        catch(e){ reject(e); }
+        document.body.removeChild(ta);
+      });
+    }
+
+    /* ── community founder count ── */
+    (function loadFounderCount(){
+      fetch(SUPABASE_URL + '/rest/v1/founders?select=id&limit=1', {
+        headers: {
+          'apikey': ANON_KEY,
+          'Authorization': 'Bearer ' + ANON_KEY,
+          'Prefer': 'count=exact'
+        }
+      }).then(function(r){
+        var header = r.headers.get('content-range');
+        if(!header) return null;
+        var n = parseInt(header.split('/')[1], 10);
+        return isNaN(n) ? null : n;
+      }).then(function(n){
+        if(n && n > 0){
+          document.getElementById('founderTotal').textContent = n.toLocaleString('en-US');
+        }
+      }).catch(function(){});
+    })();
+
+    /* ── scratch card ── */
+    var canvas = document.getElementById('scratchCanvas');
+    var wrap = document.getElementById('canvasWrap');
+    var ctx = null;
+    try{ ctx = canvas.getContext('2d', { willReadFrequently: true }); }catch(e){ ctx = null; }
+    var hint = document.getElementById('scratchHint');
+    var fill = document.getElementById('pctFill');
+    var pctLabel = document.getElementById('pctLabel');
+    var revealed = false;
+    var drawing = false;
+    var dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+
+    function drawCover(w, h){
+      if(!ctx) return;
+      var g = ctx.createLinearGradient(0, 0, w, h);
+      g.addColorStop(0, '#2A2A32');
+      g.addColorStop(.5, '#1A1A1E');
+      g.addColorStop(1, '#121214');
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = 'rgba(211,47,47,.20)';
+      ctx.lineWidth = 1;
+      for(var x = -h; x < w; x += 18){
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + h, h);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = 'rgba(255,255,255,.045)';
+      ctx.strokeRect(.5, .5, w - 1, h - 1);
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#F4F4F5';
+      ctx.font = '800 15px "Plus Jakarta Sans", system-ui, sans-serif';
+      ctx.fillText('CUPPILO RESERVE', w / 2, h / 2 - 4);
+      ctx.fillStyle = 'rgba(244,244,245,.55)';
+      ctx.font = '700 10px "Plus Jakarta Sans", system-ui, sans-serif';
+      ctx.fillText('OFFICIAL FOUNDING TICKET', w / 2, h / 2 + 16);
+    }
+
+    function sizeCanvas(){
+      if(revealed) return;
+      var rect = wrap.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      drawCover(canvas.width, canvas.height);
+    }
+
+    function erase(x, y){
+      if(!ctx){
+        if(hint) hint.style.opacity = '0';
+        return;
+      }
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x * dpr, y * dpr, 26 * dpr, 0, Math.PI * 2, false);
+      ctx.fill();
+      if(hint) hint.style.opacity = '0';
+      checkProgress();
+    }
+
+    function checkProgress(){
+      if(revealed) return;
+      var data, total = 0, clear = 0, i;
+      try{
+        data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      }catch(e){ return; }
+      for(i = 3; i < data.length; i += 4 * 97){
+        total++;
+        if(data[i] === 0) clear++;
+      }
+      if(!total) return;
+      var pct = Math.min(100, Math.round((clear / total) * 100));
+      fill.style.width = pct + '%';
+      pctLabel.textContent = pct + '% revealed';
+      if(pct >= 55) revealAll();
+    }
+
+    function revealAll(){
+      if(revealed) return;
+      revealed = true;
+      fill.style.width = '100%';
+      pctLabel.textContent = '100% unlocked';
+      if(hint) hint.style.display = 'none';
+      canvas.style.transition = 'opacity .4s ease-out';
+      canvas.style.opacity = '0';
+      setTimeout(function(){ canvas.style.pointerEvents = 'none'; }, 400);
+      try{ sessionStorage.setItem('cuppilo-scratch-done', '1'); }catch(e){}
+    }
+
+    function point(e){
+      var rect = canvas.getBoundingClientRect();
+      var src = e.touches && e.touches.length ? e.touches[0] : e;
+      return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+    }
+
+    canvas.addEventListener('mousedown', function(e){
+      drawing = true;
+      var p = point(e);
+      erase(p.x, p.y);
+    });
+    canvas.addEventListener('mousemove', function(e){
+      if(!drawing) return;
+      var p = point(e);
+      erase(p.x, p.y);
+    });
+    window.addEventListener('mouseup', function(){ drawing = false; });
+
+    canvas.addEventListener('touchstart', function(e){
+      drawing = true;
+      var p = point(e);
+      erase(p.x, p.y);
+    }, { passive: true });
+    canvas.addEventListener('touchmove', function(e){
+      if(!drawing) return;
+      var p = point(e);
+      erase(p.x, p.y);
+      e.preventDefault();
+    }, { passive: false });
+    canvas.addEventListener('touchend', function(){ drawing = false; });
+
+    document.getElementById('quickReveal').addEventListener('click', revealAll);
+
+    try{
+      if(sessionStorage.getItem('cuppilo-scratch-done') === '1'){
+        setTimeout(revealAll, 120);
+      }
+    }catch(e){}
+
+    var resizeTimer;
+    window.addEventListener('resize', function(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(sizeCanvas, 150);
+    });
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(function(){ sizeCanvas(); });
+    }
+    sizeCanvas();
+
+    /* ── actions ── */
+    document.getElementById('revealCode').addEventListener('click', function(){
+      copyText(document.getElementById('passCode').textContent.trim())
+        .then(function(){ toast('Pass code copied.'); })
+        .catch(function(){ toast('Copy failed — please copy manually.', false); });
+    });
+
+    document.getElementById('savePass').addEventListener('click', function(){
+      var founder = params.get('founder');
+      var lines = [
+        'CUPPILO — FOUNDERS PASS',
+        '========================',
+        'Code: ' + code,
+        'Reward: Tasting Flight & Single-Origin Chemex',
+        'Includes: signature warm croissant',
+        founder ? ('Founder number: ' + founder) : 'Founder number: pending',
+        'Valid at Main Street Flagship',
+        'Expires 31 Dec 2026',
+        '',
+        'Show this pass at the counter.',
+        'https://www.instagram.com/cuppilo.campaign'
+      ].join('\n');
+      try{
+        var blob = new Blob([lines], { type: 'text/plain;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'cuppilo-founders-pass.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+        toast('Pass saved to your device.');
+      }catch(e){
+        toast('Could not save the pass.', false);
+      }
+    });
+
+    document.getElementById('sharePass').addEventListener('click', function(){
+      var shareUrl = location.origin + location.pathname;
+      var data = {
+        title: 'Cuppilo Founders Pass',
+        text: 'I unlocked a founding perk at Cuppilo. Scratch your own card: ' + code,
+        url: shareUrl
+      };
+      if(navigator.share){
+        navigator.share(data).catch(function(){});
+        return;
+      }
+      copyText(shareUrl + ' — ' + data.text)
+        .then(function(){ toast('Share text copied to clipboard.'); })
+        .catch(function(){ toast('Sharing is not available here.', false); });
+    });
+  })();
+  </script>
+
+</body>
+</html>

@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CUPPILO — A cafe we are building together</title>
-  <meta name="description" content="Cuppilo is not open yet. We are building Kerala's first community-shaped cafe. Share your idea in 2 minutes."/>
+  <title>CUPPILO — Shape Your Cuppilo Cafe Experience</title>
+  <meta name="description" content="Cuppilo is not open yet. We are building Kerala's first community-shaped cafe. Complete 6 short questions in 2 minutes and claim a complimentary pour-over."/>
   <meta name="robots" content="index, follow"/>
   <link rel="canonical" href="https://cuppilo.in/"/>
-  <meta name="theme-color" content="#872419"/>
+  <meta name="theme-color" content="#D32F2F"/>
   <link rel="icon" type="image/svg+xml" href="img/favicon.svg"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://cuppilo.in/"/>
@@ -17,663 +17,815 @@
   <meta name="twitter:card" content="summary"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="css/styles.css" defer/>
+  <script>
+    (function(){
+      try{
+        var t = localStorage.getItem('cuppilo-theme');
+        if(!t){ t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+        document.documentElement.setAttribute('data-theme', t);
+      }catch(e){ document.documentElement.setAttribute('data-theme','light'); }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
 
-  <header class="topbar">
-    <img src="img/logo-icon.png" alt="CUPPILO" class="topbar-logo"/>
-  </header>
+  <div class="wrap">
 
-  <main>
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="hero-badge">
-          <span class="dot"></span>
-          A campaign by Cuppilo
+    <!-- ═══════ FLOATING PILL HEADER ═══════ -->
+    <header class="topnav">
+      <div class="topnav-inner">
+        <a class="topnav-logo" href="#top" aria-label="Cuppilo home">
+          <img src="img/logo-icon.png" alt="CUPPILO"/>
+        </a>
+        <nav class="topnav-links" aria-label="Primary">
+          <a href="#how">How it works</a>
+          <a href="#feedback-form">Take survey</a>
+          <a href="scratch.html">Rewards</a>
+        </nav>
+        <div class="topnav-actions">
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle colour theme">
+            <span class="t-sun"><span class="material-symbols-outlined">light_mode</span></span>
+            <span class="t-moon"><span class="material-symbols-outlined">dark_mode</span></span>
+          </button>
+          <button class="icon-btn hamburger" id="menuBtn" type="button" aria-label="Open navigation menu">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
         </div>
-        <h1>A cafe we are building <span class="accent">together.</span></h1>
-        <p class="hero-sub">Premium experiences. Affordable prices. Meaningful moments.</p>
-        <p class="hero-countdown" id="hero-countdown">Until Cuppilo opens: -- days --:--:--</p>
-        <p class="hero-tagline">We are asking Kerala what they actually want — the drinks, the food, the vibe, the pricing. Every answer shapes what we build.</p>
-        <button class="cta-btn" id="cta-btn" onclick="openForm()" type="button">
-          <span class="material-symbols-outlined cta-icon" id="cta-icon">lightbulb</span>
-          <span class="cta-text-wrap">
-            <span class="cta-text active" data-icon="lightbulb">Help Build It</span>
-            <span class="cta-text" data-icon="chat_bubble">Share your thoughts</span>
-            <span class="cta-text" data-icon="timer">Complete in 2 min</span>
+      </div>
+    </header>
+
+    <!-- ═══════ MOBILE DRAWER ═══════ -->
+    <div class="drawer" id="drawer">
+      <div class="drawer-panel" role="dialog" aria-label="Navigation">
+        <a href="#how" data-close>How it works <span class="material-symbols-outlined">arrow_outward</span></a>
+        <a href="#feedback-form" data-close>Take the survey <span class="material-symbols-outlined">arrow_outward</span></a>
+        <a href="scratch.html">Your rewards <span class="material-symbols-outlined">arrow_outward</span></a>
+        <a href="admin.html">Admin console <span class="material-symbols-outlined">arrow_outward</span></a>
+        <a class="drawer-cta" href="#feedback-form" data-close>Share Your Thoughts</a>
+      </div>
+    </div>
+
+    <main id="top" style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- ═══════ HERO ═══════ -->
+      <section class="card hero-card">
+        <div class="badge"><span class="pulse"></span>Quick 2-Minute Feedback</div>
+        <h1>Shape Your Cuppilo <span class="accent">Cafe Experience</span></h1>
+        <p class="hero-sub">
+          Tell us what matters most to your coffee ritual — from single-origin roasts to
+          workspace comfort. Complete all 6 short questions to claim a complimentary pour-over.
+        </p>
+        <div class="countdown">
+          <span class="material-symbols-outlined">event</span>
+          <span>Until Cuppilo opens: <b id="countdown">—</b></span>
+        </div>
+        <button class="btn btn-primary btn-block" id="ctaBtn" type="button">
+          <span class="material-symbols-outlined">lightbulb</span>
+          <span class="cta-rot" id="ctaRot">
+            <span class="active">Help Build It</span>
+            <span>Share your thoughts</span>
+            <span>Complete in 2 min</span>
           </span>
-
         </button>
-      </div>
-    </section>
+      </section>
 
-    <!-- WHY -->
-    <section class="why">
-      <div class="container">
-        <div class="why-quote">
-          <blockquote>Cuppilo is not open yet. We are starting with an idea — and we are asking Kerala what that idea should become.</blockquote>
+      <!-- ═══════ HOW IT WORKS ═══════ -->
+      <section class="card" id="how">
+        <div class="section-head">
+          <h2>About Cuppilo &amp; How It Works</h2>
+          <p>Designed to co-create the ultimate neighbourhood coffee hub.</p>
         </div>
-      </div>
-    </section>
-
-    <!-- SURVEY FLOW: 5 questions, one per screen -->
-<section class="survey-flow">
-  <div class="container">
-    <div class="survey-header">
-      <span>Question 1 of 5</span>
-      <h2>What kind of café design dream do you have?</h2>
-      <a href="javascript:void(0)" class="survey-back" onclick="prevSurvey()">← Back</a>
-    </div>
-    
-    <div class="survey-question" id="q1">
-      <div class="question-text">Q1: What kind of café design dream do you have?</div>
-      <div class="options-grid">
-        <div class="option-card" data-q="1" data-answer="A">
-          <span class="material-symbols-outlined">local_cafe</span>
-          <h3>Speciality Coffee</h3>
-          <p>Focus on specialty beans, pour-over, single-origin</p>
-        </div>
-        <div class="option-card" data-q="1" data-answer="B">
-          <span class="material-symbols-outlined">restaurant</span>
-          <h3>Traditional Kerala</h3>
-          <p>Filter coffee, tiffin, local flavors</p>
-        </div>
-        <div class="option-card" data-q="1" data-answer="C">
-          <span class="material-symbols-outlined">storefront</span>
-          <h3>Modern Fusion</h3>
-          <p>Western-style café, continental, fusion dishes</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="survey-question" id="q2" style="display:none;">
-      <div class="question-text">Q2: Pick your vibe</div>
-      <div class="options-grid">
-        <div class="option-card" data-q="2" data-answer="A">
-          <span class="material-symbols-outlined">park</span>
-          <h3>Quiet & Work-Friendly</h3>
-          <p>Study spaces, outlets, low noise</p>
-        </div>
-        <div class="option-card" data-q="2" data-answer="B">
-          <span class="material-symbols-outlined">smart_toy</span>
-          <h3>Social & Lively</h3>
-          <p>Group seating, events, music</p>
-        </div>
-        <div class="option-card" data-q="2" data-answer="C">
-          <span class="material-symbols-outlined">favorite_border</span>
-          <h3>Cozy & Intimate</h3>
-          <p>Small space, romantic, dates</p>
-        </div>
-        <div class="option-card" data-q="2" data-answer="D">
-          <span class="material-symbols-outlined">terrain</span>
-          <h3>Open Air & Veranda</h3>
-          <p>Outdoor seating, breeze, nature view</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="survey-question" id="q3" style="display:none;">
-      <div class="question-text">Q3: What should we serve?</div>
-      <div class="options-grid">
-        <div class="option-card" data-q="3" data-answer="A">
-          <span class="material-symbols-outlined">coffee</span>
-          <h3>Pazham Pori</h3>
-          <p>Banana fritter, evening snack</p>
-        </div>
-        <div class="option-card" data-q="3" data-answer="B">
-          <span class="material-symbols-outlined">cake</span>
-          <h3>Unniyappam</h3>
-          <p>Traditional sweet rice cake</p>
-        </div>
-        <div class="option-card" data-q="3" data-answer="C">
-          <span class="material-symbols-outlined">food</span>
-          <h3>Puffs & Sandwiches</h3>
-          <p>Quick bites, variety</p>
-        </div>
-        <div class="option-card" data-q="3" data-answer="D">
-          <span class="material-symbols-outlined">local_dining</span>
-          <h3>Full Meals</h3>
-          <p>Thali, set meals, family style</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="survey-question" id="q4" style="display:none;">
-      <div class="question-text">Q4: Select your tribe to enjoy Cuppilo</div>
-      <div class="options-grid">
-        <div class="option-card" data-q="4" data-answer="A">
-          <span class="material-symbols-outlined">ac_unit</span>
-          <h3>Quiet & Work-Friendly</h3>
-          <p>Focus mode, laptop users, peaceful</p>
-        </div>
-        <div class="option-card" data-q="4" data-answer="B">
-          <span class="material-symbols-outlined">people</span>
-          <h3>Social & Lively</h3>
-          <p>Group gatherings, celebrations</p>
-        </div>
-        <div class="option-card" data-q="4" data-answer="C">
-          <span class="material-symbols-outlined">favorite</span>
-          <h3>Cozy & Intimate</h3>
-          <p>Candlelight, couples, romance</p>
-        </div>
-        <div class="option-card" data-q="4" data-answer="D">
-          <span class="material-symbols-outlined">add</span>
-          <h3>Build Your Own</h3>
-          <p>Custom vibe (enter below)</p>
-          <input type="text" id="custom-vibe" placeholder="Describe your ideal vibe...">
-        </div>
-      </div>
-    </div>
-    
-    <div class="survey-question" id="q5" style="display:none;">
-      <div class="question-text">Q5: What feels fair for a great cup?</div>
-      <div class="options-grid">
-        <div class="option-card" data-q="5" data-answer="A">
-          <span class="material-symbols-outlined">payments</span>
-          <h3>Everyday Affordable</h3>
-          <p>Rs.40-80, accessible daily</p>
-        </div>
-        <div class="option-card" data-q="5" data-answer="B">
-          <span class="material-symbols-outlined">stars</span>
-          <h3>Quality Feels Right</h3>
-          <p>Rs.80-120, premium experience</p>
-        </div>
-        <div class="option-card" data-q="5" data-answer="C">
-          <span class="material-symbols-outlined">emoji_events</span>
-          <h3>Worth the Experience</h3>
-          <p>Rs.120+, special occasion</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="survey-nav">
-      <button class="btn-nav prev" onclick="prevSurvey()">← Prev</button>
-      <button class="btn-nav next" onclick="nextSurvey()">Next →</button>
-    </div>
-  </div>
-</section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <a href="https://www.instagram.com/cuppilo.campaign" class="footer-insta" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        Follow on Instagram
-      </a>
-      <p>&copy; 2026 CUPPILO. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- FORM OVERLAY                               -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="form-overlay" id="formOverlay">
-    <div class="form-panel">
-      <!-- TOPBAR -->
-      <div class="form-topbar">
-        <button class="form-close" onclick="closeForm()" type="button" aria-label="Close form">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-        <span class="form-topbar-title">CUPPILO</span>
-        <div style="width:40px"></div>
-      </div>
-
-      <!-- PROGRESS -->
-      <div class="form-progress">
-        <div class="form-progress-fill" id="progressFill"></div>
-      </div>
-
-      <!-- SCROLLABLE BODY -->
-      <div class="form-body">
-
-        <!-- STEP 1 — About You -->
-        <div class="form-step active" data-step="1">
-          <div class="form-step-head">
-            <span class="material-symbols-outlined form-step-icon">person</span>
-            <h2>About You</h2>
-            <p>Tell us a little about yourself</p>
+        <div class="process-list">
+          <div class="process-item">
+            <div class="process-num"><span class="material-symbols-outlined">quiz</span></div>
+            <div class="process-body">
+              <h3>Step 1: Quick Survey</h3>
+              <p>6 focused multiple-choice questions on your coffee habits and lounge preferences.</p>
+            </div>
           </div>
-
-          <div class="form-field">
-            <label>Your name</label>
-            <input type="text" class="form-input" id="inputName" placeholder="Enter your name" required/>
+          <div class="process-divider"></div>
+          <div class="process-item">
+            <div class="process-num"><span class="material-symbols-outlined">bar_chart</span></div>
+            <div class="process-body">
+              <h3>Step 2: Direct Community Impact</h3>
+              <p>We curate new seasonal roasts and quiet workspace amenities based on your votes.</p>
+            </div>
           </div>
-
-          <div class="form-field">
-            <label>How often do you visit cafes?</label>
-            <div class="form-options" data-field="frequency">
-              <button class="form-opt" type="button" data-value="Daily" onclick="selectSingle(this)">Daily</button>
-              <button class="form-opt" type="button" data-value="Few times a week" onclick="selectSingle(this)">Few times a week</button>
-              <button class="form-opt" type="button" data-value="Few times a month" onclick="selectSingle(this)">Few times a month</button>
-              <button class="form-opt" type="button" data-value="Rarely" onclick="selectSingle(this)">Rarely</button>
+          <div class="process-divider"></div>
+          <div class="process-item">
+            <div class="process-num"><span class="material-symbols-outlined">redeem</span></div>
+            <div class="process-body">
+              <h3>Step 3: Instant Perk</h3>
+              <p>Receive an exclusive in-store voucher code upon completing the final submission.</p>
             </div>
           </div>
         </div>
+      </section>
 
-        <!-- STEP 2 — Your Cafe -->
-        <div class="form-step" data-step="2">
-          <div class="form-step-head">
-            <span class="material-symbols-outlined form-step-icon">storefront</span>
-            <h2>Your Cafe</h2>
-            <p>What kind of cafe experience do you love?</p>
+      <!-- ═══════ SURVEY (6 STEPS) ═══════ -->
+      <section class="survey" id="feedback-form">
+        <div class="survey-head">
+          <div class="survey-head-top">
+            <a class="topnav-logo" href="#top" aria-label="Cuppilo home">
+              <img src="img/logo-icon.png" alt="CUPPILO"/>
+            </a>
+            <button class="icon-btn" id="surveyClose" type="button" aria-label="Back to home">
+              <span class="material-symbols-outlined">close</span>
+            </button>
           </div>
 
-          <div class="form-field">
-            <label>Favourite cafe style</label>
-            <div class="form-options" data-field="cafeType" id="optsCafeType"></div>
+          <div class="seg-progress" id="segProgress" role="progressbar"
+               aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" aria-label="Survey progress">
+            <span class="seg active"></span><span class="seg"></span><span class="seg"></span>
+            <span class="seg"></span><span class="seg"></span><span class="seg"></span>
           </div>
 
-          <div class="form-field">
-            <label>Preferred atmosphere</label>
-            <div class="form-options" data-field="atmosphere" id="optsAtmosphere"></div>
-          </div>
-        </div>
-
-        <!-- STEP 3 — Menu -->
-        <div class="form-step" data-step="3">
-          <div class="form-step-head">
-            <span class="material-symbols-outlined form-step-icon">restaurant_menu</span>
-            <h2>Menu</h2>
-            <p>Pick everything you'd love to see on the menu</p>
-          </div>
-
-          <div class="form-field">
-            <label>Drinks <span class="label-hint">(pick all that apply)</span></label>
-            <div class="form-chips" data-field="drinks" id="chipsDrinks"></div>
-          </div>
-
-          <div class="form-field">
-            <label>Food <span class="label-hint">(pick all that apply)</span></label>
-            <div class="form-chips" data-field="food" id="chipsFood"></div>
+          <div class="step-meta">
+            <span class="step-count" id="stepCount">Step 01 of 06</span>
+            <span class="step-cat" id="stepCat">Cafe Identity</span>
           </div>
         </div>
 
-        <!-- STEP 4 — Pricing -->
-        <div class="form-step" data-step="4">
-          <div class="form-step-head">
-            <span class="material-symbols-outlined form-step-icon">payments</span>
-            <h2>Pricing</h2>
-            <p>What price range feels right for you?</p>
+        <div class="survey-body">
+
+          <!-- STEP 1 -->
+          <div class="step active" data-step="1">
+            <div class="q-card">
+              <span class="q-badge"><span class="pulse"></span>Cafe Identity</span>
+              <h2>What kind of cafe design dream do you have?</h2>
+              <p class="q-sub">Select the option that best matches the Cuppilo you want to walk into.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Cafe design dream">
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Speciality Coffee">
+                <span class="option-icon"><span class="material-symbols-outlined">local_cafe</span></span>
+                <span class="option-text">
+                  <span class="option-title">Speciality Coffee</span>
+                  <span class="option-desc">Focus on specialty beans, pour-over, single-origin</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Traditional Kerala">
+                <span class="option-icon"><span class="material-symbols-outlined">restaurant</span></span>
+                <span class="option-text">
+                  <span class="option-title">Traditional Kerala</span>
+                  <span class="option-desc">Filter coffee, tiffin, local flavors</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Modern Fusion">
+                <span class="option-icon"><span class="material-symbols-outlined">storefront</span></span>
+                <span class="option-text">
+                  <span class="option-title">Modern Fusion</span>
+                  <span class="option-desc">Western-style cafe, continental, fusion dishes</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+            </div>
           </div>
 
-          <div class="form-field">
-            <label>Preferred price range per item</label>
-            <div class="form-options" data-field="priceRange" id="optsPriceRange"></div>
+          <!-- STEP 2 -->
+          <div class="step" data-step="2">
+            <div class="q-card">
+              <span class="q-badge"><span class="pulse"></span>The Vibe</span>
+              <h2>Pick your vibe</h2>
+              <p class="q-sub">The mood you want every Cuppilo visit to have.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Preferred vibe">
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Quiet &amp; Work-Friendly">
+                <span class="option-icon"><span class="material-symbols-outlined">park</span></span>
+                <span class="option-text">
+                  <span class="option-title">Quiet &amp; Work-Friendly</span>
+                  <span class="option-desc">Study spaces, outlets, low noise</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Social &amp; Lively">
+                <span class="option-icon"><span class="material-symbols-outlined">smart_toy</span></span>
+                <span class="option-text">
+                  <span class="option-title">Social &amp; Lively</span>
+                  <span class="option-desc">Group seating, events, music</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Cozy &amp; Intimate">
+                <span class="option-icon"><span class="material-symbols-outlined">favorite_border</span></span>
+                <span class="option-text">
+                  <span class="option-title">Cozy &amp; Intimate</span>
+                  <span class="option-desc">Small space, warm lighting, dates</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Open Air &amp; Veranda">
+                <span class="option-icon"><span class="material-symbols-outlined">terrain</span></span>
+                <span class="option-text">
+                  <span class="option-title">Open Air &amp; Veranda</span>
+                  <span class="option-desc">Outdoor seating, breeze, nature view</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+            </div>
           </div>
+
+          <!-- STEP 3 -->
+          <div class="step" data-step="3">
+            <div class="q-card">
+              <span class="q-badge"><span class="pulse"></span>The Menu</span>
+              <h2>What should we serve?</h2>
+              <p class="q-sub">Choose the food you would come back for.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Food preference">
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Pazham Pori">
+                <span class="option-icon"><span class="material-symbols-outlined">bakery_dining</span></span>
+                <span class="option-text">
+                  <span class="option-title">Pazham Pori</span>
+                  <span class="option-desc">Banana fritter, evening snack</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Unniyappam">
+                <span class="option-icon"><span class="material-symbols-outlined">cake</span></span>
+                <span class="option-text">
+                  <span class="option-title">Unniyappam</span>
+                  <span class="option-desc">Traditional sweet rice cake</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Puffs &amp; Sandwiches">
+                <span class="option-icon"><span class="material-symbols-outlined">lunch_dining</span></span>
+                <span class="option-text">
+                  <span class="option-title">Puffs &amp; Sandwiches</span>
+                  <span class="option-desc">Quick bites, plenty of variety</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Full Meals">
+                <span class="option-icon"><span class="material-symbols-outlined">local_dining</span></span>
+                <span class="option-text">
+                  <span class="option-title">Full Meals</span>
+                  <span class="option-desc">Thali, set meals, family style</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="step" data-step="4">
+            <div class="q-card">
+              <span class="q-badge"><span class="pulse"></span>Your Tribe</span>
+              <h2>Select your tribe to enjoy Cuppilo</h2>
+              <p class="q-sub">Who you are here with — and how the room should feel.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Your tribe">
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Quiet &amp; Work-Friendly">
+                <span class="option-icon"><span class="material-symbols-outlined">laptop_mac</span></span>
+                <span class="option-text">
+                  <span class="option-title">Quiet &amp; Work-Friendly</span>
+                  <span class="option-desc">Focus mode, laptop users, peaceful</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Social &amp; Lively">
+                <span class="option-icon"><span class="material-symbols-outlined">groups</span></span>
+                <span class="option-text">
+                  <span class="option-title">Social &amp; Lively</span>
+                  <span class="option-desc">Group gatherings, celebrations</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Cozy &amp; Intimate">
+                <span class="option-icon"><span class="material-symbols-outlined">favorite</span></span>
+                <span class="option-text">
+                  <span class="option-title">Cozy &amp; Intimate</span>
+                  <span class="option-desc">Candlelight, couples, romance</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Build Your Own" data-custom="1">
+                <span class="option-icon"><span class="material-symbols-outlined">add_circle</span></span>
+                <span class="option-text">
+                  <span class="option-title">Build Your Own</span>
+                  <span class="option-desc">Custom vibe — describe it below</span>
+                  <input class="option-custom" id="customVibe" type="text"
+                         placeholder="Describe your ideal vibe..." onclick="event.stopPropagation()"/>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 5 -->
+          <div class="step" data-step="5">
+            <div class="q-card">
+              <span class="q-badge"><span class="pulse"></span>Fair Pricing</span>
+              <h2>What feels fair for a great cup?</h2>
+              <p class="q-sub">Honest pricing helps us plan a menu that lasts.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Price range">
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Everyday Affordable">
+                <span class="option-icon"><span class="material-symbols-outlined">payments</span></span>
+                <span class="option-text">
+                  <span class="option-title">Everyday Affordable</span>
+                  <span class="option-desc">Rs.40&ndash;80, accessible daily</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Quality Feels Right">
+                <span class="option-icon"><span class="material-symbols-outlined">stars</span></span>
+                <span class="option-text">
+                  <span class="option-title">Quality Feels Right</span>
+                  <span class="option-desc">Rs.80&ndash;120, premium experience</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+              <button class="option" type="button" role="radio" aria-checked="false" data-value="Worth the Experience">
+                <span class="option-icon"><span class="material-symbols-outlined">emoji_events</span></span>
+                <span class="option-text">
+                  <span class="option-title">Worth the Experience</span>
+                  <span class="option-desc">Rs.120+, special occasion</span>
+                </span>
+                <span class="option-radio"><span class="material-symbols-outlined">check</span></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 6 -->
+          <div class="step" data-step="6">
+            <div class="q-card">
+              <span class="q-badge"><span class="pulse"></span>Almost Done</span>
+              <h2>Where should we send your founder pass?</h2>
+              <p class="q-sub">Last step — your name and a way to reach you about the launch.</p>
+            </div>
+            <div class="card" style="padding:20px;">
+              <div class="field">
+                <label for="inputName">Your name</label>
+                <input class="input" id="inputName" type="text" placeholder="Enter your name" autocomplete="name"/>
+                <div class="field-error" id="nameError">Please tell us your name.</div>
+              </div>
+              <div class="field">
+                <label for="inputContact">Contact <span class="label-hint">(optional)</span></label>
+                <input class="input" id="inputContact" type="text"
+                       placeholder="Email or phone — so we can keep you posted" autocomplete="email"/>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══════ FOOTER ═══════ -->
+      <footer class="site-footer">
+        <div class="footer-banner">
+          <img class="fb-logo" src="img/logo-typography.png" alt="CUPPILO"/>
+          <p class="fb-tag">Crafting purposeful coffee moments.</p>
+          <img class="fb-watermark" src="img/logo-icon.png" alt=""/>
         </div>
 
-        <!-- STEP 5 — Your Ideas -->
-        <div class="form-step" data-step="5">
-          <div class="form-step-head">
-            <span class="material-symbols-outlined form-step-icon">lightbulb</span>
-            <h2>Your Ideas</h2>
-            <p>What would make Cuppilo special to you?</p>
+        <div class="footer-body">
+          <div class="footer-cols">
+            <div class="footer-col">
+              <h4>Links</h4>
+              <ul>
+                <li><a href="#how">How it works</a></li>
+                <li><a href="#feedback-form">Take survey</a></li>
+                <li><a href="scratch.html">Rewards</a></li>
+                <li><a href="admin.html">Admin</a></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h4>Company</h4>
+              <ul>
+                <li><a href="https://www.instagram.com/cuppilo.campaign" target="_blank" rel="noopener">Instagram</a></li>
+                <li><a href="#feedback-form">Campaign</a></li>
+                <li><a href="thank-you.html">Founder pass</a></li>
+                <li><a href="#privacy" data-noop>Privacy Policy</a></li>
+              </ul>
+            </div>
           </div>
 
-          <div class="form-field">
-            <label>Tell us your idea</label>
-            <textarea class="form-textarea" id="inputIdeas" rows="4" placeholder="Share anything — a drink, a vibe, an experience..."></textarea>
+          <form class="newsletter" id="newsletterForm">
+            <input type="email" id="newsletterEmail" placeholder="Enter email address" aria-label="Email address"/>
+            <button type="submit">Subscribe</button>
+          </form>
+
+          <div class="footer-social">
+            <a class="social-pill social-ig" href="https://www.instagram.com/cuppilo.campaign" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              Follow on Instagram
+            </a>
           </div>
 
-          <div class="form-field">
-            <label>Contact <span class="label-hint">(optional)</span></label>
-            <input type="text" class="form-input" id="inputContact" placeholder="Email or phone — so we can keep you posted"/>
-          </div>
+          <p class="copyright">&copy; 2026 Cuppilo Cafe. All rights reserved.</p>
         </div>
-      </div>
+      </footer>
 
-      <!-- NAV -->
-      <div class="form-nav">
-        <button class="btn-back" type="button" id="btnBack" onclick="prevStep()">
-          <span class="material-symbols-outlined">arrow_back</span>
-          Back
-        </button>
-        <button class="btn-next" type="button" id="btnNext" onclick="nextStep()">
-          Next
-          <span class="material-symbols-outlined">arrow_forward</span>
-        </button>
-      </div>
-    </div>
+    </main>
   </div>
 
-  <!-- CTA text rotation -->
-  <script>
-    (function(){
-      var phrases = document.querySelectorAll('.cta-text');
-      var iconEl = document.getElementById('cta-icon');
-      var current = 0;
-      setInterval(function(){
-        phrases[current].classList.remove('active');
-        current = (current + 1) % phrases.length;
-        phrases[current].classList.add('active');
-        iconEl.textContent = phrases[current].getAttribute('data-icon');
-      }, 2500);
-    })();
-  </script>
+  <!-- ═══════ SURVEY DOCK ═══════ -->
+  <footer class="dock" id="dock">
+    <button class="dock-back" id="stepBack" type="button" aria-label="Previous step" disabled>
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <button class="dock-next" id="stepNext" type="button">
+      <span id="nextLabel">Next Question</span>
+      <span class="material-symbols-outlined" id="nextIcon">arrow_forward</span>
+    </button>
+  </footer>
 
-  <!-- DYNAMIC FORM CONFIG LOADER -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="material-symbols-outlined" id="toastIcon">check_circle</span>
+    <span id="toastText">Saved</span>
+  </div>
+
   <script>
-    (function(){
-      var STORAGE_KEY = 'cuppilo_form_config';
-      var defaults = {
-        drinks: ['Coffee', 'Tea', 'Shakes', 'Juices', 'Smoothies', 'Cold Drinks'],
-        food: ['Pazham Pori', 'Unniyappam', 'Puffs', 'Sandwiches', 'Fries', 'Desserts'],
-        cafeTypes: ['Specialty Coffee', 'Traditional Kerala', 'Modern Fusion'],
-        atmospheres: ['Quiet & Work-Friendly', 'Social & Lively', 'Cozy & Intimate', 'Open Air & Veranda'],
-        prices: ['Rs.40-80', 'Rs.80-120', 'Rs.120-160', 'Rs.160+']
+  (function(){
+    'use strict';
+
+    var SUPABASE_URL = 'https://ydugwvdotepndwdmqmxo.supabase.co';
+    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkdWd3dmRvdGVwbmR3ZG1xbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MDIwODEsImV4cCI6MjEwNTM3ODA4MX0.R_gNOA4TNeKhaOOQ9Wl6P0fjwVO3gp2L6-SH29aC-TM';
+
+    var CATEGORIES = ['Cafe Identity','Atmosphere','The Menu','Community','Pricing','About You'];
+    var TOTAL = 6;
+    var current = 1;
+    var submitting = false;
+
+    /* ── helpers ── */
+    function $(id){ return document.getElementById(id); }
+    function rest(path, opts){
+      opts = opts || {};
+      var headers = {
+        'Content-Type':'application/json',
+        'apikey':SUPABASE_KEY,
+        'Authorization':'Bearer ' + SUPABASE_KEY
       };
-      var cfg;
-      try { cfg = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaults; } catch(e) { cfg = defaults; }
-
-      function renderOpts(containerId, items) {
-        var el = document.getElementById(containerId);
-        if (!el) return;
-        el.innerHTML = '';
-        items.forEach(function(item) {
-          var btn = document.createElement('button');
-          btn.className = 'form-opt';
-          btn.type = 'button';
-          btn.setAttribute('data-value', item);
-          btn.setAttribute('onclick', 'selectSingle(this)');
-          btn.textContent = item;
-          el.appendChild(btn);
-        });
-      }
-
-      function renderChips(containerId, items) {
-        var el = document.getElementById(containerId);
-        if (!el) return;
-        el.innerHTML = '';
-        items.forEach(function(item) {
-          var btn = document.createElement('button');
-          btn.className = 'form-chip';
-          btn.type = 'button';
-          btn.setAttribute('data-value', item);
-          btn.setAttribute('onclick', 'toggleChip(this)');
-          btn.textContent = item;
-          el.appendChild(btn);
-        });
-      }
-
-      renderOpts('optsCafeType', cfg.cafeTypes || defaults.cafeTypes);
-      renderOpts('optsAtmosphere', cfg.atmospheres || defaults.atmospheres);
-      renderOpts('optsPriceRange', cfg.prices || defaults.prices);
-      renderChips('chipsDrinks', cfg.drinks || defaults.drinks);
-      renderChips('chipsFood', cfg.food || defaults.food);
-    })();
-  </script>
-
-  <!-- FORM LOGIC -->
-  <script>
-    var currentStep = 1;
-    var totalSteps  = 5;
-
-    /* ── overlay open / close ── */
-    function openForm() {
-      var overlay = document.getElementById('formOverlay');
-      overlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      currentStep = 1;
-      showStep(1);
-    }
-
-    function closeForm() {
-      var overlay = document.getElementById('formOverlay');
-      overlay.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    /* ── step navigation ── */
-    function showStep(n) {
-      var steps = document.querySelectorAll('.form-step');
-      steps.forEach(function(s){ s.classList.remove('active'); });
-      steps[n - 1].classList.add('active');
-
-      var back  = document.getElementById('btnBack');
-      var next  = document.getElementById('btnNext');
-
-      back.style.visibility = n === 1 ? 'hidden' : 'visible';
-
-      if (n === totalSteps) {
-        next.innerHTML = 'Submit <span class="material-symbols-outlined">check</span>';
-        next.onclick = submitForm;
-      } else {
-        next.innerHTML = 'Next <span class="material-symbols-outlined">arrow_forward</span>';
-        next.onclick = nextStep;
-      }
-
-      updateProgress(n);
-    }
-
-    function nextStep() {
-      if (currentStep === 1) {
-        var name = document.getElementById('inputName').value.trim();
-        if (!name) {
-          document.getElementById('inputName').focus();
-          document.getElementById('inputName').classList.add('shake');
-          setTimeout(function(){ document.getElementById('inputName').classList.remove('shake'); }, 500);
-          return;
-        }
-      }
-      if (currentStep < totalSteps) {
-        currentStep++;
-        showStep(currentStep);
-      }
-    }
-
-    function prevStep() {
-      if (currentStep > 1) {
-        currentStep--;
-        showStep(currentStep);
-      }
-    }
-
-    function updateProgress(n) {
-      var pct = ((n - 1) / (totalSteps - 1)) * 100;
-      document.getElementById('progressFill').style.width = pct + '%';
-    }
-
-    /* ── single-select option buttons ── */
-    function selectSingle(btn) {
-      var group = btn.closest('.form-options');
-      var opts  = group.querySelectorAll('.form-opt');
-      opts.forEach(function(o){ o.classList.remove('selected'); });
-      btn.classList.add('selected');
-    }
-
-    /* ── multi-select chips ── */
-    function toggleChip(btn) {
-      btn.classList.toggle('selected');
-    }
-
-    /* ── collect & submit ── */
-    function submitForm() {
-      var data = {};
-
-      // Step 1
-      data.name      = document.getElementById('inputName').value.trim();
-      data.frequency = getSingle('frequency') || '';
-
-      // Step 2
-      data.cafe_type   = getSingle('cafeType') || '';
-      data.atmosphere = getSingle('atmosphere') || '';
-
-      // Step 3
-      data.drinks = getMulti('drinks').join(', ');
-      data.food   = getMulti('food').join(', ');
-
-      // Step 4
-      data.price_range = getSingle('priceRange') || '';
-
-      // Step 5
-      data.ideas   = document.getElementById('inputIdeas').value.trim();
-      data.contact = document.getElementById('inputContact').value.trim();
-
-      // POST to Supabase
-      var SUPABASE_URL = 'https://ydugwvdotepndwdmqmxo.supabase.co';
-      var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkdWd3dmRvdGVwbmR3ZG1xbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MDIwODEsImV4cCI6MjEwNTM3ODA4MX0.R_gNOA4TNeKhaOOQ9Wl6P0fjwVO3gp2L6-SH29aC-TM';
-
-      fetch(SUPABASE_URL + '/rest/v1/campaign_responses', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(data)
-      }).then(function() {
-        window.location.href = 'thank-you.html';
-      }).catch(function() {
-        window.location.href = 'thank-you.html';
+      if(opts.prefer) headers['Prefer'] = opts.prefer;
+      return fetch(SUPABASE_URL + path, {
+        method: opts.method || 'GET',
+        headers: headers,
+        body: opts.body ? JSON.stringify(opts.body) : undefined
       });
     }
 
-    function getSingle(field) {
-      var group = document.querySelector('[data-field="' + field + '"]');
-      if (!group) return null;
-      var sel = group.querySelector('.form-opt.selected');
-      return sel ? sel.getAttribute('data-value') : null;
+    var toastTimer;
+    function toast(msg, ok){
+      var el = $('toast');
+      $('toastText').textContent = msg;
+      $('toastIcon').textContent = ok === false ? 'error' : 'check_circle';
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2800);
     }
 
-    function getMulti(field) {
-      var group = document.querySelector('[data-field="' + field + '"]');
-      if (!group) return [];
-      var chips = group.querySelectorAll('.form-chip.selected');
-      return Array.prototype.map.call(chips, function(c){ return c.getAttribute('data-value'); });
+    /* ── theme toggle ── */
+    function setTheme(t){
+      document.documentElement.setAttribute('data-theme', t);
+      try{ localStorage.setItem('cuppilo-theme', t); }catch(e){}
+    }
+    var toggleBtn = $('themeToggle');
+    if(toggleBtn){
+      toggleBtn.addEventListener('click', function(){
+        var cur = document.documentElement.getAttribute('data-theme');
+        setTheme(cur === 'dark' ? 'light' : 'dark');
+      });
     }
 
-    /* ── countdown timer ── */
-    function startCountdown() {
+    /* ── drawer ── */
+    var drawer = $('drawer');
+    function closeDrawer(){ drawer.classList.remove('open'); }
+    $('menuBtn').addEventListener('click', function(){ drawer.classList.toggle('open'); });
+    drawer.addEventListener('click', function(e){
+      if(e.target === drawer || e.target.hasAttribute('data-close')) closeDrawer();
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeDrawer();
+    });
+
+    /* ── countdown ── */
+    (function(){
       var target = new Date('2027-01-01T09:00:00+05:30');
-      var el = document.getElementById('hero-countdown');
-      if (!el) return;
-      setInterval(function() {
-        var now = new Date();
-        var diff = target - now;
-        if (diff <= 0) {
-          el.textContent = 'Cuppilo is open!';
+      var el = $('countdown');
+      function tick(){
+        var diff = target - new Date();
+        if(diff <= 0){ el.textContent = 'Cuppilo is open!'; return; }
+        var d = Math.floor(diff/86400000);
+        var h = Math.floor(diff%86400000/3600000);
+        var m = Math.floor(diff%3600000/60000);
+        var s = Math.floor(diff%60000/1000);
+        el.textContent = d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+
+    /* ── rotating CTA ── */
+    (function(){
+      var spans = $('ctaRot').querySelectorAll('span');
+      if(spans.length < 2) return;
+      var i = 0;
+      setInterval(function(){
+        spans[i].classList.remove('active');
+        i = (i + 1) % spans.length;
+        spans[i].classList.add('active');
+      }, 2500);
+    })();
+
+    $('ctaBtn').addEventListener('click', function(){
+      var target = document.getElementById('feedback-form');
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(function(){
+        var f = document.querySelector('.step.active .option');
+        if(f) f.focus();
+      }, 620);
+    });
+
+    $('surveyClose').addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    /* ── survey dock visibility ── */
+    (function(){
+      var section = document.getElementById('feedback-form');
+      if(!('IntersectionObserver' in window)) return;
+      var io = new IntersectionObserver(function(entries){
+        document.body.classList.toggle('survey-active', entries[0].isIntersecting);
+      }, {threshold:0, rootMargin:'-10% 0px -30% 0px'});
+      io.observe(section);
+    })();
+
+    /* ── survey navigation ── */
+    function activeStepEl(){
+      return document.querySelector('.step[data-step="' + current + '"]');
+    }
+
+    function render(){
+      document.querySelectorAll('.step').forEach(function(s){
+        s.classList.toggle('active', s.getAttribute('data-step') === String(current));
+      });
+
+      var segs = $('segProgress').querySelectorAll('.seg');
+      segs.forEach(function(seg, idx){
+        seg.classList.toggle('done', idx + 1 < current);
+        seg.classList.toggle('active', idx + 1 === current);
+      });
+      $('segProgress').setAttribute('aria-valuenow', current);
+
+      $('stepCount').textContent = 'Step ' + String(current).padStart(2,'0') + ' of 0' + TOTAL;
+      $('stepCat').textContent = CATEGORIES[current - 1];
+
+      $('stepBack').disabled = current === 1;
+      var last = current === TOTAL;
+      $('nextLabel').textContent = last ? 'Submit & Claim Perk' : 'Next Question';
+      $('nextIcon').textContent = last ? 'redeem' : 'arrow_forward';
+    }
+
+    function selectedOption(stepEl){
+      return stepEl.querySelector('.option[aria-checked="true"]');
+    }
+
+    function goNext(){
+      if(submitting) return;
+      var stepEl = activeStepEl();
+
+      if(current < TOTAL){
+        if(!selectedOption(stepEl)){
+          toast('Please select an option to continue.', false);
+          var first = stepEl.querySelector('.option');
+          if(first){
+            first.style.animation = 'shake .4s ease';
+            setTimeout(function(){ first.style.animation = ''; }, 420);
+          }
           return;
         }
-        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        var secs = Math.floor((diff % (1000 * 60)) / 1000);
-        el.textContent = 'Until Cuppilo opens: ' + (days > 0 ? days + ' days ' : '') + (hours > 0 ? hours + 'h ' : '') + (mins > 0 ? mins + 'm ' : '') + secs + 's';
-      }, 1000);
-    }
-    startCountdown();
-
-    /* ── survey flow ─────────────────────────────────────── */
-    var currentQ = 1;
-
-    function showSurvey(q) {
-      document.querySelectorAll('.survey-question').forEach(function(qe){ qe.style.display = 'none'; });
-      document.getElementById('q' + q).style.display = 'block';
-      document.querySelectorAll('.survey-header span')[0].textContent = 'Question ' + q + ' of 5';
-    }
-
-    function nextSurvey() {
-      var sel = document.querySelector('.survey-question[data-q="' + currentQ + '"] .option-card.selected');
-      if (!sel && currentQ < 5) { alert('Please select an option.'); return; }
-      if (currentQ >= 5) {
-        submitSurvey();
+        current++;
+        render();
+        document.getElementById('feedback-form').scrollIntoView({behavior:'smooth', block:'start'});
         return;
       }
-      currentQ++;
-      showSurvey(currentQ);
+
+      submit();
     }
 
-    function prevSurvey() {
-      if (currentQ <= 1) return;
-      currentQ--;
-      showSurvey(currentQ);
+    function goBack(){
+      if(current <= 1) return;
+      current--;
+      render();
+      document.getElementById('feedback-form').scrollIntoView({behavior:'smooth', block:'start'});
     }
 
-    // Select option + auto-advance on single-select, toggle on multi
-    document.querySelectorAll('.option-card').forEach(function(card){
-      card.addEventListener('click', function(){
-        document.querySelectorAll('.option-card.selected').forEach(function(c){ c.classList.remove('selected'); });
-        card.classList.add('selected');
-        if (currentQ === 1 || currentQ === 3 || currentQ === 5) {
-          setTimeout(nextSurvey, 300);
-        }
+    $('stepNext').addEventListener('click', goNext);
+    $('stepBack').addEventListener('click', goBack);
+
+    /* ── option selection ── */
+    document.querySelectorAll('.step').forEach(function(stepEl){
+      stepEl.querySelectorAll('.option').forEach(function(opt){
+        opt.addEventListener('click', function(){
+          stepEl.querySelectorAll('.option').forEach(function(o){
+            o.setAttribute('aria-checked','false');
+          });
+          opt.setAttribute('aria-checked','true');
+          var custom = stepEl.querySelector('.option-custom');
+          if(custom){
+            if(opt.hasAttribute('data-custom')){
+              setTimeout(function(){ custom.focus(); }, 60);
+            }else{
+              custom.value = '';
+            }
+          }
+        });
       });
     });
 
-    function submitSurvey() {
-      // collect answers
-      var answers = {};
-      for (var i = 1; i <= 5; i++) {
-        var selected = document.querySelector('.survey-question[data-q="' + i + '"] .option-card.selected');
-        if (selected) {
-          if (i === 4 && document.getElementById('custom-vibe')) {
-            answers['q' + i] = selected.getAttribute('data-answer') + '|' + document.getElementById('custom-vibe').value.trim();
-          } else {
-            answers['q' + i] = selected.getAttribute('data-answer');
-          }
-        }
+    /* ── keyboard: arrow keys within a radiogroup ── */
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      var group = document.activeElement && document.activeElement.closest('.options');
+      if(!group) return;
+      e.preventDefault();
+      var opts = Array.prototype.slice.call(group.querySelectorAll('.option'));
+      var i = opts.indexOf(document.activeElement);
+      if(i < 0) i = 0;
+      var next = e.key === 'ArrowDown'
+        ? (i + 1) % opts.length
+        : (i - 1 + opts.length) % opts.length;
+      opts[next].focus();
+      opts[next].click();
+    });
+
+    /* ── answers ── */
+    function answerFor(step){
+      var el = document.querySelector('.step[data-step="' + step + '"] .option[aria-checked="true"]');
+      if(!el) return '';
+      var val = el.getAttribute('data-value') || '';
+      if(el.hasAttribute('data-custom')){
+        var custom = el.querySelector('.option-custom');
+        var extra = custom ? custom.value.trim() : '';
+        return extra ? val + ' — ' + extra : val;
       }
+      return val;
+    }
 
-      // create founder ID: #00000X format
-      var maxId = 0;
-      var re = /#00000(\d+)/;
-      document.querySelectorAll('.founder-number').forEach(function(el){
-        var m = el.textContent.match(re);
-        if (m && parseInt(m[1]) > maxId) maxId = parseInt(m[1]);
+    /* ── founder number ── */
+    function parseFounderNumber(raw){
+      if(!raw) return 0;
+      var digits = String(raw).replace(/[^0-9]/g, '');
+      return digits ? parseInt(digits, 10) : 0;
+    }
+
+    function nextFounderNumber(maxSeen){
+      var n = (maxSeen || 0) + 1;
+      return '#' + String(n).padStart(6, '0');
+    }
+
+    function highestFounderNumber(rows){
+      var max = 0;
+      (rows || []).forEach(function(r){
+        var v = parseFounderNumber(r.founder_number);
+        if(v > max) max = v;
       });
-      var nextNum = String(maxId + 1).padStart(5, '0');
-      var founderNumber = '#00000' + nextNum;
+      return max;
+    }
 
-      // build data object
-      var data = {
-        name: document.getElementById('inputName').value.trim(),
-        frequency: document.querySelector('input[name="frequency"]:checked') ? document.querySelector('input[name="frequency"]:checked').value : '',
-        cafe_type: document.querySelector('.form-opt.selected') ? document.querySelector('.form-opt.selected').getAttribute('data-value') : '',
-        atmosphere: document.querySelector('.form-opt.selected') ? document.querySelector('.form-opt.selected').getAttribute('data-value') : '',
-        drinks: answers.q1 || '',
-        food: answers.q3 || '',
-        price_range: answers.q5 || '',
-        ideas: answers.q2 + ' ' + (answers.q4 || ''),
-        contact: document.getElementById('inputContact').value.trim(),
-        status: 'confirmed',
-        submitted_at: new Date().toISOString(),
-        founder_id: null
-      };
-
-      // POST to Supabase
-      var SUPABASE_URL = 'https://ydugwvdotepndwdmqmxo.supabase.co';
-      var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkdWd3dmRvdGVwbmR3ZG1xbXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MDIwODEsImV4cCI6MjEwNTM3ODA4MX0.R_gNOA4TNeKhaOOQ9Wl6P0fjwVO3gp2L6-SH29aC-TM';
-
-      fetch(SUPABASE_URL + '/rest/v1/campaign_responses', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY
-        },
-        body: JSON.stringify(data)
-      }).then(function() {
-        // insert founder row
-        return fetch(SUPABASE_URL + '/rest/v1/founders', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-          },
-          body: JSON.stringify({ founder_number: founderNumber, name: data.name, contact: data.contact })
-        });
-      }).then(function() {
-        // show founder card / thank you
-        window.location.href = 'thank-you.html?founder=' + founderNumber;
-      }).catch(function(err) {
-        console.error(err);
-        alert('Error submitting. Please try again.');
+    /* ── client-generated ids (anon inserts cannot use RETURNING) ── */
+    function newId(){
+      var c = window.crypto || window.msCrypto;
+      if(c && typeof c.randomUUID === 'function') return c.randomUUID();
+      if(c && typeof c.getRandomValues === 'function'){
+        var b = new Uint8Array(16);
+        c.getRandomValues(b);
+        b[6] = (b[6] & 0x0f) | 0x40;
+        b[8] = (b[8] & 0x3f) | 0x80;
+        var h = [];
+        for(var i = 0; i < 16; i++) h.push((b[i] + 0x100).toString(16).slice(1));
+        return h.slice(0,4).join('') + '-' + h.slice(4,6).join('') + '-' +
+               h.slice(6,8).join('') + '-' + h.slice(8,10).join('') + '-' + h.slice(10,16).join('');
+      }
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(ch){
+        var r = Math.random() * 16 | 0;
+        var v = ch === 'x' ? r : ((r & 0x3) | 0x8);
+        return v.toString(16);
       });
     }
+
+    function postRow(path, body){
+      return rest(path, { method:'POST', body:body }).then(function(r){
+        if(r.ok) return true;
+        return r.text().then(function(t){ throw new Error(t || r.statusText); });
+      });
+    }
+
+    /* ── submit ── */
+    function submit(){
+      var name = $('inputName').value.trim();
+      if(!name){
+        $('nameError').classList.add('show');
+        $('inputName').classList.add('shake');
+        $('inputName').focus();
+        setTimeout(function(){ $('inputName').classList.remove('shake'); }, 500);
+        return;
+      }
+      $('nameError').classList.remove('show');
+
+      var contact = $('inputContact').value.trim();
+      var responseId = newId();
+      var founderId = newId();
+      var payload = {
+        id: responseId,
+        name: name,
+        frequency: '',
+        cafe_type: answerFor(1),
+        atmosphere: answerFor(2),
+        food: answerFor(3),
+        ideas: answerFor(4),
+        price_range: answerFor(5),
+        drinks: '',
+        contact: contact,
+        status: 'confirmed',
+        submitted_at: new Date().toISOString()
+      };
+
+      submitting = true;
+      var btn = $('stepNext');
+      var prevHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span><span>Saving…</span>';
+
+      function finish(){
+        submitting = false;
+        btn.disabled = false;
+        btn.innerHTML = prevHtml;
+      }
+
+      var founderNumber = '#000001';
+      var voucherCode = '';
+
+      function nextFounderAttempt(tries){
+        return rest('/rest/v1/founders?select=founder_number&order=founder_number.desc&limit=1')
+          .then(function(r){ return r.ok ? r.json() : []; })
+          .catch(function(){ return []; })
+          .then(function(founders){
+            founderNumber = nextFounderNumber(highestFounderNumber(founders));
+            return postRow('/rest/v1/founders', {
+              id: founderId,
+              founder_number: founderNumber,
+              name: name,
+              contact: contact,
+              campaign_response_id: responseId
+            }).catch(function(err){
+              if(tries > 0 && /duplicate|unique/i.test(String(err && err.message))){
+                founderId = newId();
+                return nextFounderAttempt(tries - 1);
+              }
+              throw err;
+            });
+          });
+      }
+
+      postRow('/rest/v1/campaign_responses', payload)
+        .then(function(){ return nextFounderAttempt(2); })
+        .then(function(){
+          var digits = founderNumber.replace(/[^0-9]/g, '').slice(-5).padStart(5, '0');
+          voucherCode = 'CUPPILO-ROAST-' + digits;
+          return postRow('/rest/v1/vouchers', {
+            code: voucherCode,
+            status: 'unclaimed',
+            campaign_response_id: responseId,
+            founder_id: founderId
+          });
+        })
+        .then(function(){
+          var q = '?founder=' + encodeURIComponent(founderNumber) +
+                  '&voucher=' + encodeURIComponent(voucherCode);
+          window.location.replace('thank-you.html' + q);
+        })
+        .catch(function(err){
+          console.error(err);
+          finish();
+          toast('Could not save your answers. Please try again.', false);
+        });
+    }
+
+    /* ── newsletter ── */
+    $('newsletterForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var input = $('newsletterEmail');
+      var val = input.value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
+        toast('Please enter a valid email address.', false);
+        input.focus();
+        return;
+      }
+      input.value = '';
+      toast('You are on the launch list. Thank you!');
+    });
+
+    document.querySelectorAll('[data-noop]').forEach(function(a){
+      a.addEventListener('click', function(e){ e.preventDefault(); });
+    });
+
+    render();
+  })();
   </script>
 
 </body>
